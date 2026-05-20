@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مار و پله عاشقانه ❤️</title>
+    <style>
+        @import url('https://v1.fontapi.ir/css/Vazir');
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazir', sans-serif;
+        }
+
+        /* قفل کردن ارتفاع به اندازه مانیتور و جلوگیری از اسکرول */
+        body {
+            background: radial-gradient(circle, #4a0e17 0%, #1a0508 100%);
+            color: white;
+            margin: 0;
+            padding: 2vh 2vw; /* حاشیه‌های داینامیک برای جلوگیری از چسبیدن به لبه‌ها */
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+        }
+
+        .game-wrapper {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 50, 100, 0.3);
+            width: 100%;
+            height: 100%; /* گرفتن تمام ارتفاع مجاز */
+            max-width: 1300px;
+            display: flex;
+            flex-direction: row; /* قرارگیری المان‌ها در کنار هم (راست و چپ) */
+            gap: 20px;
+        }
+
+        /* --- پنل تنظیمات در سمت راست --- */
+        .control-panel {
+            flex: 0 0 260px; /* عرض ثابت برای پنل راست */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #2b0811;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #ff4d6d;
+            gap: 30px; /* فاصله بین آیتم‌ها */
+            height: 100%;
+        }
+
+        .header-compact {
+            text-align: center;
+        }
+
+        .header-compact h1 {
+            margin: 0;
+            color: #ff4d6d;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+            font-size: 1.8rem;
+            line-height: 1.4;
+        }
+
+        .header-compact p {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .turn-box {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(255, 77, 109, 0.2);
+            padding: 10px 15px;
+            border-radius: 10px;
+            width: 100%;
+            border: 1px solid rgba(255, 77, 109, 0.5);
+        }
+
+        #roll-btn {
+            background: linear-gradient(45deg, #ff4d6d, #c9184a);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Vazir';
+            font-weight: bold;
+            width: 100%;
+        }
+
+        #roll-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff4d6d;
+        }
+
+        #roll-btn:disabled {
+            background: #555;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* --- استایل‌های تاس ۳ بعدی --- */
+        .dice-scene {
+            width: 60px;
+            height: 60px;
+            perspective: 400px;
+            margin: 10px 0;
+        }
+
+        .dice {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(-30px);
+            transition: transform 1.5s cubic-bezier(0.25, 1, 0.3, 1);
+        }
+
+        .dice__face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fff, #f0f0f0);
+            border: 3px solid #ff4d6d;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #c9184a;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            background-clip: padding-box; 
+            overflow: hidden;
+        }
+
+        .dice__face--1 { transform: rotateY(  0deg) translateZ(30px); }
+        .dice__face--6 { transform: rotateY(180deg) translateZ(30px); }
+        .dice__face--3 { transform: rotateY( 90deg) translateZ(30px); }
+        .dice__face--4 { transform: rotateY(-90deg) translateZ(30px); }
+        .dice__face--2 { transform: rotateX( 90deg) translateZ(30px); }
+        .dice__face--5 { transform: rotateX(-90deg) translateZ(30px); }
+
+        /* --- استایل بورد بزرگ و داینامیک --- */
+        .board-container {
+            position: relative;
+            flex: 1; /* گرفتن تمام فضای باقی‌مانده سمت چپ */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .board {
+            position: relative; /* بسیار مهم برای مکان‌یابی دقیق مهره‌ها و بوم نقاشی */
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 3px;
+            background: #110306;
+            padding: 5px;
+            border-radius: 12px;
+            border: 3px solid #590d22;
+            
+            /* جادوی تغییر سایز خودکار به شکل مربع و پر کردن فضا */
+            height: 100%;
+            max-width: 100%;
+            aspect-ratio: 1 / 1; 
+        }
+
+        #snakes-ladders-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none; 
+            z-index: 5;
+        }
+
+        .cell {
+            aspect-ratio: 1 / 1;
+            background: #3a0ca3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: clamp(0.7rem, 1.5vmin, 1.2rem); /* تغییر سایز عدد نسبت به بورد */
+            color: rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+        }
+
+        .cell:nth-child(even) { background: #00c3ff75; color: #fff;}
+        .cell:nth-child(odd) { background: #ff007388; color: #fff;}
+
+        .action-cell {
+            background: #ffb703 !important;
+            color: #000 !important;
+            box-shadow: inset 0 0 10px #fb8500;
+        }
+        .action-cell::after {
+            content: "❤️";
+            position: absolute;
+            opacity: 0.3;
+            font-size: clamp(1rem, 2vmin, 1.5rem);
+        }
+
+        /* --- مهره‌های انیمیشن‌دار (آواتارها) --- */
+        .player-token {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem; 
+            transition: left 0.35s ease-in-out, top 0.35s ease-in-out; 
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+        }
+
+        /* --- پنجره‌های پاپ‌آپ (Modal) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #590d22, #800f2f);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border: 2px solid #ff4d6d;
+            box-shadow: 0 0 30px #ff4d6d;
+            position: relative;
+            animation: popIn 0.3s ease-out;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ffb703;
+        }
+
+        .accept-btn {
+            background: linear-gradient(45deg, #ffb703, #fb8500);
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-family: 'Vazir';
+            font-size: 1.1rem;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .accept-btn:hover { transform: scale(1.05); }
+
+        /* فرم تنظیمات */
+        .setup-section { margin-bottom: 20px; text-align: right; }
+        .setup-section label { font-weight: bold; color: #ffb703; font-size: 0.9rem; }
+        .setup-section input { width: 100%; padding: 10px; margin-top: 8px; border-radius: 8px; border: 1px solid #ff4d6d; background: rgba(0, 0, 0, 0.4); color: white; font-family: 'Vazir'; font-size: 1rem; }
+        .setup-section input:focus { outline: none; border-color: #ffb703; }
+        .avatar-selection { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 12px; justify-content: center; }
+        .avatar-option { font-size: 1.8rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; border: 2px solid transparent; user-select: none; }
+        .avatar-option:hover { transform: scale(1.2); }
+        .avatar-option.selected { border-color: #ffb703; background: rgba(255, 183, 3, 0.2); transform: scale(1.1); }
+
+        /* --- ریسپانسیو اختصاصی برای موبایل --- */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .game-wrapper {
+                flex-direction: column; /* در موبایل روی هم قرار میگیرند */
+                padding: 10px;
+                gap: 10px;
+            }
+            .control-panel {
+                flex: 0 0 auto;
+                flex-direction: row; /* در موبایل منو افقی می‌شود */
+                width: 100%;
+                height: auto;
+                padding: 10px 15px;
+                gap: 15px;
+            }
+            .header-compact { display: none; } /* مخفی کردن متن در موبایل برای جا دادن بورد */
+            .turn-box { font-size: 1rem; width: auto; flex: 1; padding: 8px; }
+            .dice-scene { width: 40px; height: 40px; margin: 0; }
+            .dice__face { width: 40px; height: 40px; font-size: 20px; }
+            .dice__face--1 { transform: rotateY(  0deg) translateZ(20px); }
+            .dice__face--6 { transform: rotateY(180deg) translateZ(20px); }
+            .dice__face--3 { transform: rotateY( 90deg) translateZ(20px); }
+            .dice__face--4 { transform: rotateY(-90deg) translateZ(20px); }
+            .dice__face--2 { transform: rotateX( 90deg) translateZ(20px); }
+            .dice__face--5 { transform: rotateX(-90deg) translateZ(20px); }
+            
+            #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="setup-modal" class="modal" style="display: flex;">
+        <div class="modal-content">
+            <h2 style="color: white; margin-top: 0;">تنظیمات بازی 💑</h2>
+            
+            <div class="setup-section">
+                <label>اسم بازیکن ۱ (آقا):</label>
+                <input type="text" id="p1-name-input" placeholder="مثلا: علی">
+                <div class="avatar-selection" id="p1-avatars">
+                    <span class="avatar-option selected" onclick="selectAvatar(1, this, '👨🏻')">👨🏻</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '🍆')">🍆</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '🍌')">🍌</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '🌭')">🌭</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '🥚')">🥚</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '🤤')">🤤</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '👅')">👅</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '🩲')">🩲</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '♠️')">♠️</span>
+                    <span class="avatar-option" onclick="selectAvatar(1, this, '💦')">💦</span>
+                </div>
+            </div>
+
+            <div class="setup-section">
+                <label>اسم بازیکن ۲ (خانم):</label>
+                <input type="text" id="p2-name-input" placeholder="مثلا: نازنین">
+                <div class="avatar-selection" id="p2-avatars">
+                    <span class="avatar-option selected" onclick="selectAvatar(2, this, '👩🏻')">👩🏻</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '❤️‍🔥')">❤️‍🔥</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '🍑')">🍑</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '🍓')">🍓</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '🍩')">🍩</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '😝')">😝</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '🫦')">🫦</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '👙')">👙</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '♥️')">♥️</span>
+                    <span class="avatar-option" onclick="selectAvatar(2, this, '🔥')">🔥</span>
+                </div>
+            </div>
+
+            <button class="accept-btn" onclick="startGame()">شروع بازی 🎲</button>
+        </div>
+    </div>
+
+    <div class="game-wrapper">
+        <div class="control-panel">
+            <div class="header-compact">
+                <h1>بازی مار و پله<br>عاشقانه ❤️</h1>
+                <p>با هر تاس، یک قدم نزدیک‌تر...</p>
+            </div>
+
+            <div class="turn-box">
+                <p id="turn-indicator" style="margin:0;">نوبت: ...</p>
+            </div>
+            
+            <div class="dice-scene">
+                <div id="dice" class="dice">
+                    <div class="dice__face dice__face--1">۱</div>
+                    <div class="dice__face dice__face--6">۶</div>
+                    <div class="dice__face dice__face--3">۳</div>
+                    <div class="dice__face dice__face--4">۴</div>
+                    <div class="dice__face dice__face--2">۲</div>
+                    <div class="dice__face dice__face--5">۵</div>
+                </div>
+            </div>
+
+            <button id="roll-btn" onclick="rollDice()">تاس بریز 🎲</button>
+        </div>
+
+        <div class="board-container">
+            <div id="board" class="board"></div>
+            <canvas id="snakes-ladders-canvas"></canvas>
+        </div>
+    </div>
+
+    <div id="action-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">چالش عاشقانه! 💌</h2>
+            <p id="modal-text"></p>
+            <button class="accept-btn" onclick="closeModal()">انجامش می‌دیم!</button>
+        </div>
+    </div>
+
+    <script>
+        // متغیرهای شخصی‌سازی
+        let p1Name = "مرد";
+        let p2Name = "زن";
+        let p1Avatar = "👨🏻";
+        let p2Avatar = "👩🏻";
+
+        // منطق بازی
+        let p1Pos = 1; 
+        let p2Pos = 1; 
+        let currentPlayer = 1; 
+        let isRolling = false; 
+        let rollCount = 0; 
+
+        // تابع توقف برای ایجاد انیمیشن حرکت دانه دانه
+        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+        // --- تعریف صداها ---
+        const bgMusic = new Audio('sounds/bg-music.mp3');
+        bgMusic.loop = true; 
+        bgMusic.volume = 0.3; 
+
+        const diceSound = new Audio('sounds/dice.mp3');
+        const moveSound = new Audio('sounds/step.mp3');
+        const ladderSound = new Audio('sounds/ladder.mp3');
+        const snakeSound = new Audio('sounds/snake.mp3');
+        const heartSound = new Audio('sounds/heart.mp3'); // صدای جدید برای خانه های طلایی
+
+        // مارها و پله‌ها
+        const snakes = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78 };
+        const ladders = { 2: 38, 4: 14, 9: 31, 21: 42, 28: 84, 36: 44, 51: 67, 71: 91, 80: 99 };
+        const actionCellIndices = [5, 8, 10, 12, 16, 20, 23, 28, 34, 38, 40, 45, 50, 55, 59, 64, 68, 72, 75, 80, 85, 91, 94];
+
+        // چالش‌های عاشقانه
+        const challengePool = [
+            "💦بشین توی بغلش و لب‌هاش رو 2 دقیقه بخور💦",
+            "🔥با زبونت از روی گردنش شروع کن لیس زدن و برو روی لبش و بعد هم برو تا روی گوشش🔥",
+            "🤤یکی از لباس‌هاش رو در بیار🤤",
+            "❤️‍🔥لای پاهاش رو 3 دقیقه از روی شلوار بمال❤️‍🔥",
+            "💦فقط 5 دقیقه آروم توی پوزیشنی که دوست داری بغلش کن💦",
+            "🤤هرجای بدنشو که گفت باید 3 بار بوس کنی🤤",
+            "🔥سرشو بزار روی پاهات و موهاش رو 4 دقیقه نوازش کن🔥",
+            "💦زبونش رو باید بیاره بیرون و میتونی هرچقدر میخوای زبونش رو بخوری💦",
+            "🤤یه گاز کوچولو از هرکدوم از نوک ممه‌هاش بگیر🤤",
+            "❤️‍🔥از نافش شروع کن آروم میک بزن و برو تا نوک ممه‌هاش❤️‍🔥",
+            "🤤دست کن توی شرتش و آروم اونجاش رو بمال🤤",
+            "🔥یکی محکم بزن در کونش🔥",
+            "🤤دستاش رو بگیر بالای سرش تا هیچکاری نتونه بکنه و 5 دقیقه تا حد مرگ تحریکش کن🤤",
+            "❤️‍🔥دست کن توی سوراخ کونش ولی زیاد دستت تو نره❤️‍🔥",
+            "💦لای پاهاش رو 2 دقیقه براش بخور💦",
+            "🤤میتونی 3 دقیقه هرچقدر میخوای کونش رو بمالی و اسپنک بزنی🤤",
+            "💦باید در حالتی که صورت‌هاتون برعکس همدیگه است از هم لب بگیرید و زبون همدیگه رو بخورید💦",
+            "🔥سرت رو از پایین بکن توی لباسش و میمی‌هاش رو میک بزن🔥",
+            "❤️‍🔥درحالیکه به پشت خوابیدی باید بیاد روت و هرجایی رو که گفتی 5 دقیقه بخوره برات❤️‍🔥",
+            "🤤فقط 4 جا از بدنش رو که خیلی دوست داری بوس کن🤤",
+            "💦باید 5 دقیقه بدنش رو در اختیارت بزاره تا هرکار دوست داشتی بکنی💦",
+            "❤️‍🔥گردن و گوش‌هاش رو 1 دقیقه بخور و نباید علامتی از تحریک شدن نشون بده،اگر تحریک شد بزن در کونش❤️‍🔥",
+            "❤️‍🔥ایندر باید ممه‌هات رو بماله و زبونتو بخوره تا صدات در بیاد❤️‍🔥",
+            "🤤توی پوزیشنی که دوست داری از روی شلوار سکس کنید🤤",
+            "🔥فقط 3 دقیقه روی کونش بخواب🔥",
+            "❤️‍🔥از الان تا آخر بازی هرکی صدا آه و ناله‌اش در بیاد باید زبونشو 1 دقیقه در اختیار طرف مقابل بزاره❤️‍🔥",
+            "🔥برو روش و هرجایی رو که گفت باید 3 دقیقه بمالی براش🔥",
+            "❤️‍🔥هرکاری تو باهاش کردی اونم همزمان یا بعدش باید همونکار رو باهات بکنه❤️‍🔥"
+        ];
+
+        // --- توابع فرم ورود ---
+        function selectAvatar(playerNum, element, avatar) {
+            let siblings = element.parentElement.children;
+            for(let i=0; i<siblings.length; i++){
+                siblings[i].classList.remove('selected');
+            }
+            element.classList.add('selected');
+            if(playerNum === 1) p1Avatar = avatar; else p2Avatar = avatar;
+        }
+
+        function startGame() {
+            let input1 = document.getElementById("p1-name-input").value.trim();
+            let input2 = document.getElementById("p2-name-input").value.trim();
+            if(input1) p1Name = input1;
+            if(input2) p2Name = input2;
+
+            document.getElementById("setup-modal").style.display = "none";
+            document.getElementById("turn-indicator").innerText = "نوبت: " + p1Name + " " + p1Avatar;
+
+            bgMusic.play().catch(error => console.log("مرورگر اجازه پخش خودکار را نداد."));
+            document.getElementById("setup-modal").style.display = "none";
+            
+            createBoard();
+        }
+
+        // --- ساخت بورد ---
+        function createBoard() {
+            const board = document.getElementById("board");
+            board.innerHTML = ""; 
+            let cellsNum = [];
+            
+            for (let row = 9; row >= 0; row--) {
+                let rowCells = [];
+                for (let col = 0; col < 10; col++) {
+                    rowCells.push(row * 10 + col + 1);
+                }
+                if (row % 2 !== 0) rowCells.reverse(); 
+                cellsNum = cellsNum.concat(rowCells);
+            }
+
+            cellsNum.forEach(num => {
+                let div = document.createElement("div");
+                div.className = "cell";
+                div.id = "cell-" + num;
+                div.innerText = num;
+
+                if (actionCellIndices.includes(num)) div.classList.add("action-cell");
+                board.appendChild(div);
+            });
+
+            setTimeout(() => {
+                drawSnakesAndLadders();
+                updateTokens();
+            }, 100);
+        }
+
+        // --- رسم مار و نردبان روی بوم شیشه‌ای ---
+        function drawSnakesAndLadders() {
+            const canvas = document.getElementById('snakes-ladders-canvas');
+            const board = document.getElementById('board');
+            if (!canvas || !board) return;
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = board.offsetWidth;
+            canvas.height = board.offsetHeight;
+
+            // مکان یابی دقیق بوم روی بورد
+            canvas.style.top = board.offsetTop + "px";
+            canvas.style.left = board.offsetLeft + "px";
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.lineCap = 'round';
+
+            for (let start in ladders) drawLadder(ctx, parseInt(start), ladders[start]);
+            for (let start in snakes) drawSnake(ctx, parseInt(start), snakes[start]);
+        }
+
+        function getCellCenter(cellId) {
+            const cell = document.getElementById("cell-" + cellId);
+            if (!cell) return null;
+            return {
+                x: cell.offsetLeft + cell.offsetWidth / 2,
+                y: cell.offsetTop + cell.offsetHeight / 2
+            };
+        }
+
+        function drawLadder(ctx, start, end) {
+            let pStart = getCellCenter(start);
+            let pEnd = getCellCenter(end);
+            if (!pStart || !pEnd) return;
+
+            const dx = pEnd.x - pStart.x;
+            const dy = pEnd.y - pStart.y;
+            const angle = Math.atan2(dy, dx);
+            
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            
+            ctx.strokeStyle = '#5c3a21'; 
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+
+            const offset = 6.4; 
+            const offsetX = Math.cos(angle + Math.PI/2) * offset;
+            const offsetY = Math.sin(angle + Math.PI/2) * offset;
+
+            ctx.beginPath();
+            ctx.moveTo(pStart.x - offsetX, pStart.y - offsetY);
+            ctx.lineTo(pEnd.x - offsetX, pEnd.y - offsetY);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(pStart.x + offsetX, pStart.y + offsetY);
+            ctx.lineTo(pEnd.x + offsetX, pEnd.y + offsetY);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#8a5a33';
+            ctx.lineWidth = 2.8;
+            let steps = 7;
+            for (let i = 1; i < steps; i++) {
+                let t = i / steps;
+                let cx = pStart.x + dx * t;
+                let cy = pStart.y + dy * t;
+                
+                ctx.beginPath();
+                ctx.moveTo(cx - offsetX, cy - offsetY);
+                ctx.lineTo(cx + offsetX, cy + offsetY);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawSnake(ctx, start, end) {
+            let pStart = getCellCenter(start); 
+            let pEnd = getCellCenter(end);     
+            if (!pStart || !pEnd) return;
+
+            const snakeId = start;
+            const dx = pEnd.x - pStart.x;
+            const dy = pEnd.y - pStart.y;
+            const dist = Math.sqrt(dx * dx + dy * dy); 
+            const baseAngle = Math.atan2(dy, dx);
+
+            ctx.save();
+            
+            ctx.shadowColor = 'rgba(0,0,0,0.6)';
+            ctx.shadowBlur = 6;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 5;
+
+            let hue = (snakeId * 137) % 360; 
+            let saturation = 70 + (snakeId % 30);
+            let lightness = 40 + (snakeId % 20); 
+
+            let gradBody = ctx.createLinearGradient(pStart.x, pStart.y, pEnd.x, pEnd.y);
+            gradBody.addColorStop(0, `hsl(${hue}, ${saturation}%, ${lightness - 15}%)`); 
+            gradBody.addColorStop(0.5, `hsl(${hue}, ${saturation}%, ${lightness + 10}%)`); 
+            gradBody.addColorStop(1, `hsl(${hue}, ${saturation}%, ${lightness - 5}%)`);   
+
+            let bodyWidth = (6 + (dist / 35) + (snakeId % 5)) * 0.9; 
+
+            let curveMagnitude = (dist * 0.25 + (snakeId % 40)) * 0.9; 
+            if (snakeId % 2 === 0) curveMagnitude *= -1; 
+            
+            let midX = (pStart.x + pEnd.x) / 2;
+            let midY = (pStart.y + pEnd.y) / 2;
+            
+            let cpX = midX + Math.cos(baseAngle + Math.PI / 2) * curveMagnitude;
+            let cpY = midY + Math.sin(baseAngle + Math.PI / 2) * curveMagnitude;
+
+            let waves = 2 + (snakeId % 4); 
+            let amplitude = (bodyWidth * 1.2 + (snakeId % 10)) * 0.9; 
+            if (snakeId % 3 === 0) amplitude *= -1; 
+
+            let points = [];
+            let segments = 60; 
+            for (let i = 0; i <= segments; i++) {
+                let t = i / segments;
+                let tt = 1 - t;
+                
+                let bx = tt * tt * pStart.x + 2 * tt * t * cpX + t * t * pEnd.x;
+                let by = tt * tt * pStart.y + 2 * tt * t * cpY + t * t * pEnd.y;
+
+                let tanX = 2 * tt * (cpX - pStart.x) + 2 * t * (pEnd.x - cpX);
+                let tanY = 2 * tt * (cpY - pStart.y) + 2 * t * (pEnd.y - cpY);
+                let curveAngle = Math.atan2(tanY, tanX);
+
+                let perpX = Math.cos(curveAngle + Math.PI / 2);
+                let perpY = Math.sin(curveAngle + Math.PI / 2);
+                
+                let taper = Math.sin(t * Math.PI); 
+                let offset = Math.sin(t * Math.PI * waves) * amplitude * taper;
+
+                points.push({
+                    x: bx + perpX * offset,
+                    y: by + perpY * offset,
+                    angle: curveAngle 
+                });
+            }
+
+            ctx.strokeStyle = gradBody;
+            ctx.lineWidth = bodyWidth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for(let i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            ctx.stroke();
+
+            ctx.shadowColor = 'transparent';
+
+            const patternType = snakeId % 4; 
+            ctx.strokeStyle = `hsl(${hue}, ${saturation}%, ${lightness - 25}%)`;
+            ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness - 25}%)`;
+            
+            for (let i = 3; i < points.length - 3; i += 3) { 
+                let pt = points[i];
+                let angle = points[i].angle; 
+                
+                ctx.save();
+                ctx.translate(pt.x, pt.y);
+                ctx.rotate(angle);
+
+                let pSize = Math.max(1, bodyWidth * 0.15); 
+                
+                if (patternType === 0) { 
+                    ctx.beginPath(); ctx.arc(0, (i % 2 === 0 ? pSize*1.5 : -pSize*1.5), pSize, 0, 2 * Math.PI); ctx.fill();
+                } 
+                else if (patternType === 1) { 
+                    ctx.lineWidth = pSize;
+                    ctx.beginPath(); ctx.moveTo(0, -bodyWidth/2 + 2); ctx.lineTo(0, bodyWidth/2 - 2); ctx.stroke();
+                }
+                else if (patternType === 2) { 
+                    ctx.lineWidth = pSize * 0.9;
+                    ctx.beginPath(); ctx.moveTo(-2, -bodyWidth/3); ctx.lineTo(2, -bodyWidth/3); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-2, bodyWidth/3); ctx.lineTo(2, bodyWidth/3); ctx.stroke();
+                }
+                else if (patternType === 3) { 
+                    ctx.lineWidth = pSize * 0.9;
+                    ctx.beginPath(); ctx.arc(0, 0, pSize*1.8, 0, Math.PI, false); ctx.stroke();
+                }
+                ctx.restore();
+            }
+
+            let pt0 = points[0];
+            let pt1 = points[1];
+            let headAngle = Math.atan2(pt0.y - pt1.y, pt0.x - pt1.x);
+
+            ctx.translate(pt0.x, pt0.y);
+            ctx.rotate(headAngle + Math.PI / 2); 
+
+            let hw = bodyWidth * 0.8;  
+            let hl = bodyWidth * 1.4;  
+
+            ctx.translate(0, hl * 0.4); 
+
+            ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness - 15}%)`;
+            ctx.beginPath();
+            ctx.moveTo(0, -hl * 0.8); 
+            ctx.quadraticCurveTo(hw * 1.3, -hl * 0.3, hw, hl * 0.3); 
+            ctx.quadraticCurveTo(0, hl * 0.6, -hw, hl * 0.3); 
+            ctx.quadraticCurveTo(-hw * 1.3, -hl * 0.3, 0, -hl * 0.8); 
+            ctx.fill();
+
+            let headGrad = ctx.createRadialGradient(0, -hl*0.2, 0, 0, 0, hl);
+            headGrad.addColorStop(0, 'rgba(255,255,255,0.15)');
+            headGrad.addColorStop(1, 'rgba(0,0,0,0.4)');
+            ctx.fillStyle = headGrad;
+            ctx.fill();
+
+            ctx.fillStyle = '#ffea00';
+            let ex = hw * 0.6;
+            let ey = -hl * 0.2;
+            
+            ctx.beginPath(); ctx.ellipse(-ex, ey, bodyWidth * 0.25, bodyWidth * 0.12, -Math.PI/6, 0, 2*Math.PI); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(ex, ey, bodyWidth * 0.25, bodyWidth * 0.12, Math.PI/6, 0, 2*Math.PI); ctx.fill();
+
+            ctx.fillStyle = '#000';
+            ctx.beginPath(); ctx.ellipse(-ex, ey, bodyWidth * 0.05, bodyWidth * 0.1, -Math.PI/6, 0, 2*Math.PI); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(ex, ey, bodyWidth * 0.05, bodyWidth * 0.1, Math.PI/6, 0, 2*Math.PI); ctx.fill();
+
+            ctx.fillStyle = '#111';
+            let nx = hw * 0.25;
+            let ny = -hl * 0.65;
+            ctx.beginPath(); ctx.arc(-nx, ny, bodyWidth*0.06, 0, 2 * Math.PI); ctx.fill();
+            ctx.beginPath(); ctx.arc(nx, ny, bodyWidth*0.06, 0, 2 * Math.PI); ctx.fill();
+
+            ctx.strokeStyle = '#d90429'; 
+            ctx.lineWidth = Math.max(1, bodyWidth * 0.1);
+            let tStart = -hl * 0.8;
+            let tEnd = -hl * 1.3;
+            ctx.beginPath();
+            ctx.moveTo(0, tStart);
+            ctx.lineTo(0, tEnd); 
+            ctx.lineTo(-hw*0.4, tEnd - hw*0.3); 
+            ctx.moveTo(0, tEnd);
+            ctx.lineTo(hw*0.4, tEnd - hw*0.3); 
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // --- حرکت دادن مهره‌ها ---
+        function updateTokens() {
+            let board = document.getElementById("board"); 
+            
+            let p1Token = document.getElementById("p1-token");
+            if (!p1Token) {
+                p1Token = document.createElement("div");
+                p1Token.id = "p1-token";
+                p1Token.className = "player-token";
+                board.appendChild(p1Token);
+            }
+            p1Token.innerText = p1Avatar;
+            p1Token.title = p1Name;
+
+            let p2Token = document.getElementById("p2-token");
+            if (!p2Token) {
+                p2Token = document.createElement("div");
+                p2Token.id = "p2-token";
+                p2Token.className = "player-token";
+                board.appendChild(p2Token);
+            }
+            p2Token.innerText = p2Avatar;
+            p2Token.title = p2Name;
+
+            let cell1 = document.getElementById("cell-" + p1Pos);
+            if (cell1) {
+                p1Token.style.left = (cell1.offsetLeft + 5) + "px";
+                p1Token.style.top = (cell1.offsetTop + 5) + "px";
+            }
+
+            let cell2 = document.getElementById("cell-" + p2Pos);
+            if (cell2) {
+                p2Token.style.left = (cell2.offsetLeft + cell2.offsetWidth - 27) + "px";
+                p2Token.style.top = (cell2.offsetTop + cell2.offsetHeight - 27) + "px";
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            drawSnakesAndLadders();
+            updateTokens();
+        });
+
+        // --- ریختن تاس سه‌بعدی ---
+        function rollDice() {
+            let diceZ = window.innerWidth <= 768 ? 20 : 30; 
+
+            if (isRolling) return; 
+            isRolling = true;
+            document.getElementById("roll-btn").disabled = true;
+
+            diceSound.currentTime = 0; 
+            diceSound.play();
+
+            let diceNum = Math.floor(Math.random() * 6) + 1;
+            let diceEl = document.getElementById("dice");
+
+            rollCount++; 
+            let baseRotation = rollCount * 1440; 
+            let targetX = 0, targetY = 0;
+
+            switch(diceNum) {
+                case 1: targetX = 0; targetY = 0; break;
+                case 6: targetX = 0; targetY = 180; break; 
+                case 3: targetX = 0; targetY = -90; break;
+                case 4: targetX = 0; targetY = 90; break;
+                case 2: targetX = -90; targetY = 0; break;
+                case 5: targetX = 90; targetY = 0; break;
+            }
+
+            diceEl.style.transform = `translateZ(-${diceZ}px) rotateX(${baseRotation + targetX}deg) rotateY(${baseRotation + targetY}deg)`;
+
+            setTimeout(async () => {
+                await executeGameLogic(diceNum);
+                isRolling = false;
+                document.getElementById("roll-btn").disabled = false;
+            }, 1500);
+        }
+
+        function checkForActions(pos) {
+            if (actionCellIndices.includes(pos)) {
+                let randomChallenge = challengePool[Math.floor(Math.random() * challengePool.length)];
+
+                heartSound.currentTime = 0; 
+                heartSound.play();
+
+                let modal = document.getElementById("action-modal");
+                document.getElementById("modal-text").innerText = randomChallenge;
+                modal.style.display = "flex";
+            }
+        }
+        // --- اجرای منطق حرکت و انیمیشن ---
+        // --- نسخه ارتقا یافته منطق حرکت با سیستم لرزش و جایزه تاس ۶ ---
+        async function executeGameLogic(dice) {
+            let player = currentPlayer;
+
+            // قانون رد نشدن از ۱۰۰
+            let currentPosCheck = player === 1 ? p1Pos : p2Pos;
+            if (currentPosCheck + dice > 100) {
+                let requiredDice = 100 - currentPosCheck;
+                
+                // تغییر نوبت بدون حرکت
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت: " + p1Name + " " + p1Avatar : "نوبت: " + p2Name + " " + p2Avatar;
+                return;
+            }
+
+            // حرکت دانه دانه مهره‌ها
+            for (let i = 0; i < dice; i++) {
+                if (player === 1) {
+                    if (p1Pos < 100) p1Pos++;
+                } else {
+                    if (p2Pos < 100) p2Pos++;
+                }
+
+                moveSound.currentTime = 0;
+                moveSound.play();
+
+                updateTokens();
+                await sleep(350); 
+            }
+
+            let targetPos = player === 1 ? p1Pos : p2Pos;
+            let finalPos = targetPos;
+
+            // بررسی نیش مار
+            if (snakes[targetPos]) {
+                snakeSound.currentTime = 0;
+                snakeSound.play();
+                
+                // افکت لرزش گوشی شدید برای نیش مار (در صورت پشتیبانی دستگاه)
+                if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+                
+                finalPos = snakes[targetPos];
+            } 
+            // بررسی نردبان
+            else if (ladders[targetPos]) {
+                ladderSound.currentTime = 0;
+                ladderSound.play();
+                
+                // افکت لرزش ملایم برای موفقیت پله
+                if (navigator.vibrate) navigator.vibrate(150);
+                
+                finalPos = ladders[targetPos];
+            }
+            
+            // جابجایی مهره روی مار یا پله
+            if (finalPos !== targetPos) {
+                if (player === 1) p1Pos = finalPos; else p2Pos = finalPos;
+                updateTokens();
+                await sleep(400); 
+                targetPos = finalPos;
+            }
+
+            // بررسی خانه‌های چالش طلایی
+            setTimeout(() => {
+                if (actionCellIndices.includes(targetPos)) {
+                    // لرزش ریتمیک شبیه ضربان قلب برای چالش‌های عاشقانه
+                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                    checkForActions(targetPos);
+                }
+            }, 300);
+
+            // بررسی وضعیت برنده
+            if (targetPos === 100) {
+                setTimeout(() => {
+                    let winnerName = player === 1 ? p1Name + " " + p1Avatar : p2Name + " " + p2Avatar;
+                    if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]); // لرزش طولانی پیروزی
+                    alert("🎉 برنده بازی: " + winnerName + "\nجایزه بزرگ امشب متعلق به برنده است! 😉");
+                    
+                    p1Pos = 1; p2Pos = 1; currentPlayer = 1; rollCount = 0;
+                    document.getElementById("dice").style.transform = `translateZ(-25px) rotateX(0deg) rotateY(0deg)`;
+                    document.getElementById("setup-modal").style.display = "flex";
+                }, 500);
+                return;
+            }
+
+            // --- سیستم هوشمند نوبت و جایزه تاس ۶ ---
+            if (dice === 6) {
+                // اگر بازیکن ۶ آورد، نوبت تغییر نمی‌کند و پیغامی در نشانگر نوبت ظاهر می‌شود
+                let pName = player === 1 ? p1Name : p2Name;
+                let pAvatar = player === 1 ? p1Avatar : p2Avatar;
+                document.getElementById("turn-indicator").innerText = " جایزه ۶! دوباره بریز " + pName + " " + pAvatar;
+                if (navigator.vibrate) navigator.vibrate([80, 80, 80]);
+            } else {
+                // در غیر این صورت، نوبت به حالت عادی تغییر می‌کند
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت: " + p1Name + " " + p1Avatar : "نوبت: " + p2Name + " " + p2Avatar;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById("action-modal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
