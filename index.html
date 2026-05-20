@@ -17,7 +17,7 @@
             background: radial-gradient(circle, #4a0e17 0%, #1a0508 100%);
             color: white;
             margin: 0;
-            padding: 2vh 2vw; /* حاشیه‌های داینامیک برای جلوگیری از چسبیدن به لبه‌ها */
+            padding: 2vh 2vw; 
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -32,16 +32,16 @@
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(255, 50, 100, 0.3);
             width: 100%;
-            height: 100%; /* گرفتن تمام ارتفاع مجاز */
+            height: 100%; 
             max-width: 1300px;
             display: flex;
-            flex-direction: row; /* قرارگیری المان‌ها در کنار هم (راست و چپ) */
+            flex-direction: row; 
             gap: 20px;
         }
 
         /* --- پنل تنظیمات در سمت راست --- */
         .control-panel {
-            flex: 0 0 260px; /* عرض ثابت برای پنل راست */
+            flex: 0 0 260px; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -50,7 +50,7 @@
             padding: 25px;
             border-radius: 15px;
             border: 2px solid #ff4d6d;
-            gap: 30px; /* فاصله بین آیتم‌ها */
+            gap: 30px; 
             height: 100%;
         }
 
@@ -154,7 +154,7 @@
         /* --- استایل بورد بزرگ و داینامیک --- */
         .board-container {
             position: relative;
-            flex: 1; /* گرفتن تمام فضای باقی‌مانده سمت چپ */
+            flex: 1; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -163,18 +163,20 @@
         }
 
         .board {
-            position: relative; /* بسیار مهم برای مکان‌یابی دقیق مهره‌ها و بوم نقاشی */
+            position: relative; 
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 3px;
+            grid-template-rows: repeat(10, 1fr); 
+            gap: 2px; 
             background: #110306;
             padding: 5px;
             border-radius: 12px;
             border: 3px solid #590d22;
             
-            /* جادوی تغییر سایز خودکار به شکل مربع و پر کردن فضا */
-            height: 100%;
-            max-width: 100%;
+            /* جادوی حفظ ابعاد مربع در مانیتورهای بزرگ */
+            width: 100%;
+            max-width: 96vh;
+            width: 96vh; 
             aspect-ratio: 1 / 1; 
         }
 
@@ -187,7 +189,8 @@
         }
 
         .cell {
-            aspect-ratio: 1 / 1;
+            width: 100%;
+            height: 100%;
             background: #3a0ca3;
             display: flex;
             justify-content: center;
@@ -195,7 +198,7 @@
             position: relative;
             border-radius: 5px;
             font-weight: bold;
-            font-size: clamp(0.7rem, 1.5vmin, 1.2rem); /* تغییر سایز عدد نسبت به بورد */
+            font-size: clamp(0.7rem, 1.5vmin, 1.2rem); 
             color: rgba(255, 255, 255, 0.5);
             overflow: hidden;
         }
@@ -299,22 +302,33 @@
         .avatar-option.selected { border-color: #ffb703; background: rgba(255, 183, 3, 0.2); transform: scale(1.1); }
 
         /* --- ریسپانسیو اختصاصی برای موبایل --- */
-        @media (max-width: 768px) {
-            body { padding: 10px; }
+        @media (max-width: 660px) {
+            body { padding: 5px; }
             .game-wrapper {
-                flex-direction: column; /* در موبایل روی هم قرار میگیرند */
-                padding: 10px;
-                gap: 10px;
+                flex-direction: column; 
+                padding: 5px;
+                gap: 5px;
+                border-radius: 10px;
+            }
+            .board {
+                gap: 2px; /* فاصله ثابت و زیبا در موبایل */
+                padding: 3px;
+                border-width: 2px;
+                border-radius: 8px;
+            }
+            .cell {
+                border-radius: 3px;
             }
             .control-panel {
                 flex: 0 0 auto;
-                flex-direction: row; /* در موبایل منو افقی می‌شود */
+                flex-direction: row; 
                 width: 100%;
                 height: auto;
                 padding: 10px 15px;
                 gap: 15px;
+                border-radius: 10px;
             }
-            .header-compact { display: none; } /* مخفی کردن متن در موبایل برای جا دادن بورد */
+            .header-compact { display: none; } 
             .turn-box { font-size: 1rem; width: auto; flex: 1; padding: 8px; }
             .dice-scene { width: 40px; height: 40px; margin: 0; }
             .dice__face { width: 40px; height: 40px; font-size: 20px; }
@@ -326,7 +340,56 @@
             .dice__face--5 { transform: rotateX(-90deg) translateZ(20px); }
             
             #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; }
+            .player-token {
+                font-size: 1.2rem; 
+            }
         }
+
+        @media (min-width: 660px) and (max-width: 1080px) {
+            body { padding: 15px; }
+            .game-wrapper {
+                flex-direction: column; 
+                padding: 10px;
+                gap: 10px;
+                border-radius: 16px;
+            }
+            .board {
+                gap: 2.5px; /* فاصله ثابت و زیبا در موبایل */
+                padding: 2px;
+                border-width: 3px;
+                border-radius: 8px;
+                height: 82vh;
+                width: 82vh;
+            }
+            .cell {
+                border-radius: 6px;
+            }
+            .control-panel {
+                flex: 0 0 auto;
+                flex-direction: row; 
+                width: 100%;
+                height: auto;
+                padding: 10px 15px;
+                gap: 15px;
+                border-radius: 10px;
+            }
+            .header-compact { display: none; } 
+            .turn-box { font-size: 1rem; width: auto; flex: 1; padding: 8px; }
+            .dice-scene { width: 40px; height: 40px; margin: 0; }
+            .dice__face { width: 40px; height: 40px; font-size: 20px; }
+            .dice__face--1 { transform: rotateY(  0deg) translateZ(20px); }
+            .dice__face--6 { transform: rotateY(180deg) translateZ(20px); }
+            .dice__face--3 { transform: rotateY( 90deg) translateZ(20px); }
+            .dice__face--4 { transform: rotateY(-90deg) translateZ(20px); }
+            .dice__face--2 { transform: rotateX( 90deg) translateZ(20px); }
+            .dice__face--5 { transform: rotateX(-90deg) translateZ(20px); }
+            
+            #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; }
+            .player-token {
+                font-size: 1.2rem; 
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -439,7 +502,7 @@
         const moveSound = new Audio('sounds/step.mp3');
         const ladderSound = new Audio('sounds/ladder.mp3');
         const snakeSound = new Audio('sounds/snake.mp3');
-        const heartSound = new Audio('sounds/heart.mp3'); // صدای جدید برای خانه های طلایی
+        const heartSound = new Audio('sounds/heart.mp3'); 
 
         // مارها و پله‌ها
         const snakes = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78 };
@@ -478,7 +541,6 @@
             "❤️‍🔥هرکاری تو باهاش کردی اونم همزمان یا بعدش باید همونکار رو باهات بکنه❤️‍🔥"
         ];
 
-        // --- توابع فرم ورود ---
         function selectAvatar(playerNum, element, avatar) {
             let siblings = element.parentElement.children;
             for(let i=0; i<siblings.length; i++){
@@ -503,7 +565,6 @@
             createBoard();
         }
 
-        // --- ساخت بورد ---
         function createBoard() {
             const board = document.getElementById("board");
             board.innerHTML = ""; 
@@ -534,7 +595,6 @@
             }, 100);
         }
 
-        // --- رسم مار و نردبان روی بوم شیشه‌ای ---
         function drawSnakesAndLadders() {
             const canvas = document.getElementById('snakes-ladders-canvas');
             const board = document.getElementById('board');
@@ -544,7 +604,6 @@
             canvas.width = board.offsetWidth;
             canvas.height = board.offsetHeight;
 
-            // مکان یابی دقیق بوم روی بورد
             canvas.style.top = board.offsetTop + "px";
             canvas.style.left = board.offsetLeft + "px";
 
@@ -573,17 +632,20 @@
             const dy = pEnd.y - pStart.y;
             const angle = Math.atan2(dy, dx);
             
+            // محاسبه مقیاس بر اساس عرض صفحه نمایش جهت ریسپانسیو شدن
+            const s = Math.max(0.4, ctx.canvas.width / 800);
+            
             ctx.save();
             ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 4;
-            ctx.shadowOffsetX = 2;
-            ctx.shadowOffsetY = 2;
+            ctx.shadowBlur = 4 * s;
+            ctx.shadowOffsetX = 2 * s;
+            ctx.shadowOffsetY = 2 * s;
             
             ctx.strokeStyle = '#5c3a21'; 
-            ctx.lineWidth = 4;
+            ctx.lineWidth = Math.max(1.5, 4 * s);
             ctx.lineCap = 'round';
 
-            const offset = 6.4; 
+            const offset = Math.max(2, 6.4 * s); 
             const offsetX = Math.cos(angle + Math.PI/2) * offset;
             const offsetY = Math.sin(angle + Math.PI/2) * offset;
 
@@ -598,7 +660,7 @@
             ctx.stroke();
 
             ctx.strokeStyle = '#8a5a33';
-            ctx.lineWidth = 2.8;
+            ctx.lineWidth = Math.max(1, 2.8 * s);
             let steps = 7;
             for (let i = 1; i < steps; i++) {
                 let t = i / steps;
@@ -624,12 +686,15 @@
             const dist = Math.sqrt(dx * dx + dy * dy); 
             const baseAngle = Math.atan2(dy, dx);
 
+            // محاسبه مقیاس بر اساس عرض صفحه نمایش جهت ریسپانسیو شدن
+            const s = Math.max(0.4, ctx.canvas.width / 800);
+
             ctx.save();
             
             ctx.shadowColor = 'rgba(0,0,0,0.6)';
-            ctx.shadowBlur = 6;
-            ctx.shadowOffsetX = 3;
-            ctx.shadowOffsetY = 5;
+            ctx.shadowBlur = 6 * s;
+            ctx.shadowOffsetX = 3 * s;
+            ctx.shadowOffsetY = 5 * s;
 
             let hue = (snakeId * 137) % 360; 
             let saturation = 70 + (snakeId % 30);
@@ -640,9 +705,9 @@
             gradBody.addColorStop(0.5, `hsl(${hue}, ${saturation}%, ${lightness + 10}%)`); 
             gradBody.addColorStop(1, `hsl(${hue}, ${saturation}%, ${lightness - 5}%)`);   
 
-            let bodyWidth = (6 + (dist / 35) + (snakeId % 5)) * 0.9; 
+            let bodyWidth = (6 * s + (dist / 35) + (snakeId % 5) * s) * 0.9; 
 
-            let curveMagnitude = (dist * 0.25 + (snakeId % 40)) * 0.9; 
+            let curveMagnitude = (dist * 0.25 + (snakeId % 40) * s) * 0.9; 
             if (snakeId % 2 === 0) curveMagnitude *= -1; 
             
             let midX = (pStart.x + pEnd.x) / 2;
@@ -652,7 +717,7 @@
             let cpY = midY + Math.sin(baseAngle + Math.PI / 2) * curveMagnitude;
 
             let waves = 2 + (snakeId % 4); 
-            let amplitude = (bodyWidth * 1.2 + (snakeId % 10)) * 0.9; 
+            let amplitude = (bodyWidth * 1.2 + (snakeId % 10) * s) * 0.9; 
             if (snakeId % 3 === 0) amplitude *= -1; 
 
             let points = [];
@@ -706,19 +771,19 @@
                 ctx.translate(pt.x, pt.y);
                 ctx.rotate(angle);
 
-                let pSize = Math.max(1, bodyWidth * 0.15); 
+                let pSize = Math.max(1 * s, bodyWidth * 0.15); 
                 
                 if (patternType === 0) { 
                     ctx.beginPath(); ctx.arc(0, (i % 2 === 0 ? pSize*1.5 : -pSize*1.5), pSize, 0, 2 * Math.PI); ctx.fill();
                 } 
                 else if (patternType === 1) { 
                     ctx.lineWidth = pSize;
-                    ctx.beginPath(); ctx.moveTo(0, -bodyWidth/2 + 2); ctx.lineTo(0, bodyWidth/2 - 2); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, -bodyWidth/2 + 2 * s); ctx.lineTo(0, bodyWidth/2 - 2 * s); ctx.stroke();
                 }
                 else if (patternType === 2) { 
                     ctx.lineWidth = pSize * 0.9;
-                    ctx.beginPath(); ctx.moveTo(-2, -bodyWidth/3); ctx.lineTo(2, -bodyWidth/3); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(-2, bodyWidth/3); ctx.lineTo(2, bodyWidth/3); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-2 * s, -bodyWidth/3); ctx.lineTo(2 * s, -bodyWidth/3); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-2 * s, bodyWidth/3); ctx.lineTo(2 * s, bodyWidth/3); ctx.stroke();
                 }
                 else if (patternType === 3) { 
                     ctx.lineWidth = pSize * 0.9;
@@ -771,7 +836,7 @@
             ctx.beginPath(); ctx.arc(nx, ny, bodyWidth*0.06, 0, 2 * Math.PI); ctx.fill();
 
             ctx.strokeStyle = '#d90429'; 
-            ctx.lineWidth = Math.max(1, bodyWidth * 0.1);
+            ctx.lineWidth = Math.max(1 * s, bodyWidth * 0.1);
             let tStart = -hl * 0.8;
             let tEnd = -hl * 1.3;
             ctx.beginPath();
@@ -811,14 +876,16 @@
 
             let cell1 = document.getElementById("cell-" + p1Pos);
             if (cell1) {
-                p1Token.style.left = (cell1.offsetLeft + 5) + "px";
-                p1Token.style.top = (cell1.offsetTop + 5) + "px";
+                // تنظیم موقعیت نسبی برای ریسپانسیو بودن در هر سایزی
+                p1Token.style.left = (cell1.offsetLeft + cell1.offsetWidth * 0.1) + "px";
+                p1Token.style.top = (cell1.offsetTop + cell1.offsetHeight * 0.1) + "px";
             }
 
             let cell2 = document.getElementById("cell-" + p2Pos);
             if (cell2) {
-                p2Token.style.left = (cell2.offsetLeft + cell2.offsetWidth - 27) + "px";
-                p2Token.style.top = (cell2.offsetTop + cell2.offsetHeight - 27) + "px";
+                // تنظیم موقعیت نسبی برای ریسپانسیو بودن در هر سایزی
+                p2Token.style.left = (cell2.offsetLeft + cell2.offsetWidth * 0.9 - p2Token.offsetWidth) + "px";
+                p2Token.style.top = (cell2.offsetTop + cell2.offsetHeight * 0.9 - p2Token.offsetHeight) + "px";
             }
         }
 
@@ -827,7 +894,6 @@
             updateTokens();
         });
 
-        // --- ریختن تاس سه‌بعدی ---
         function rollDice() {
             let diceZ = window.innerWidth <= 768 ? 20 : 30; 
 
@@ -875,23 +941,19 @@
                 modal.style.display = "flex";
             }
         }
-        // --- اجرای منطق حرکت و انیمیشن ---
-        // --- نسخه ارتقا یافته منطق حرکت با سیستم لرزش و جایزه تاس ۶ ---
+        
         async function executeGameLogic(dice) {
             let player = currentPlayer;
 
-            // قانون رد نشدن از ۱۰۰
             let currentPosCheck = player === 1 ? p1Pos : p2Pos;
             if (currentPosCheck + dice > 100) {
                 let requiredDice = 100 - currentPosCheck;
                 
-                // تغییر نوبت بدون حرکت
                 currentPlayer = currentPlayer === 1 ? 2 : 1;
                 document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت: " + p1Name + " " + p1Avatar : "نوبت: " + p2Name + " " + p2Avatar;
                 return;
             }
 
-            // حرکت دانه دانه مهره‌ها
             for (let i = 0; i < dice; i++) {
                 if (player === 1) {
                     if (p1Pos < 100) p1Pos++;
@@ -909,28 +971,23 @@
             let targetPos = player === 1 ? p1Pos : p2Pos;
             let finalPos = targetPos;
 
-            // بررسی نیش مار
             if (snakes[targetPos]) {
                 snakeSound.currentTime = 0;
                 snakeSound.play();
                 
-                // افکت لرزش گوشی شدید برای نیش مار (در صورت پشتیبانی دستگاه)
                 if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
                 
                 finalPos = snakes[targetPos];
             } 
-            // بررسی نردبان
             else if (ladders[targetPos]) {
                 ladderSound.currentTime = 0;
                 ladderSound.play();
                 
-                // افکت لرزش ملایم برای موفقیت پله
                 if (navigator.vibrate) navigator.vibrate(150);
                 
                 finalPos = ladders[targetPos];
             }
             
-            // جابجایی مهره روی مار یا پله
             if (finalPos !== targetPos) {
                 if (player === 1) p1Pos = finalPos; else p2Pos = finalPos;
                 updateTokens();
@@ -938,20 +995,17 @@
                 targetPos = finalPos;
             }
 
-            // بررسی خانه‌های چالش طلایی
             setTimeout(() => {
                 if (actionCellIndices.includes(targetPos)) {
-                    // لرزش ریتمیک شبیه ضربان قلب برای چالش‌های عاشقانه
                     if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                     checkForActions(targetPos);
                 }
             }, 300);
 
-            // بررسی وضعیت برنده
             if (targetPos === 100) {
                 setTimeout(() => {
                     let winnerName = player === 1 ? p1Name + " " + p1Avatar : p2Name + " " + p2Avatar;
-                    if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]); // لرزش طولانی پیروزی
+                    if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]); 
                     alert("🎉 برنده بازی: " + winnerName + "\nجایزه بزرگ امشب متعلق به برنده است! 😉");
                     
                     p1Pos = 1; p2Pos = 1; currentPlayer = 1; rollCount = 0;
@@ -961,15 +1015,12 @@
                 return;
             }
 
-            // --- سیستم هوشمند نوبت و جایزه تاس ۶ ---
             if (dice === 6) {
-                // اگر بازیکن ۶ آورد، نوبت تغییر نمی‌کند و پیغامی در نشانگر نوبت ظاهر می‌شود
                 let pName = player === 1 ? p1Name : p2Name;
                 let pAvatar = player === 1 ? p1Avatar : p2Avatar;
                 document.getElementById("turn-indicator").innerText = " جایزه ۶! دوباره بریز " + pName + " " + pAvatar;
                 if (navigator.vibrate) navigator.vibrate([80, 80, 80]);
             } else {
-                // در غیر این صورت، نوبت به حالت عادی تغییر می‌کند
                 currentPlayer = currentPlayer === 1 ? 2 : 1;
                 document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت: " + p1Name + " " + p1Avatar : "نوبت: " + p2Name + " " + p2Avatar;
             }
