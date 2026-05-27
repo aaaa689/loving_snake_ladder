@@ -472,7 +472,22 @@
                 gap: 2px; padding: 3px; border-width: 2px; border-radius: 8px; 
                 height: auto; width: 100%; max-height: 60vh; aspect-ratio: 1 / 1; margin: 0 auto;
             }
-            .cell { border-radius: 3px; }
+            .cell { 
+                font-size: 0.72rem !important; 
+                border-radius: 3px; 
+            }
+
+            /* آیکون سپر و تاس جادویی روی زمین */
+            .item-icon {
+                font-size: 1.02rem !important;
+                top: 1px !important;
+                left: 1px !important;
+            }
+
+            /* تاج پادشاهی خانه ۱۰۰ */
+            #cell-100::before {
+                font-size: 1.38rem !important;
+            }
             .control-panel {
                 flex: 0 0 auto;
                 flex-direction: row; 
@@ -501,7 +516,7 @@
             .dice__face--5 { transform: rotateX(-90deg) translateZ(20px); }
             
             #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; flex: 1; }
-            .player-token { font-size: 1.2rem; }
+            .player-token { font-size: 1rem; }
 
             /* چیدمان کیف‌پشتی در موبایل */
             #inventory-panel{
@@ -928,8 +943,8 @@
         let p2Joker = true; // کارت انتقام خانم
 
         // متغیرهای کیف‌پشتی
-        let p1Inventory = { shield: 1, magicDice: 1 };
-        let p2Inventory = { shield: 1, magicDice: 1 };
+        let p1Inventory = { shield: 0, magicDice: 0 };
+        let p2Inventory = { shield: 0, magicDice: 0 };
         let itemCells = {}; 
 
 
@@ -947,9 +962,9 @@
         winSound.loop = true;
 
         // مارها و پله‌ها
-        const snakes = { 16: 6, 46: 24, 49: 11, 56: 53, 64: 60, 58: 19,  89: 32, 93: 73, 95: 75, 98: 78 };
+        const snakes = { 16: 6, 46: 24, 49: 11, 56: 53, 64: 60, 58: 19,  89: 32, 93: 73, 95: 75, 98: 65 };
         const ladders = { 2: 38, 4: 14, 9: 31, 26: 48, 28: 76, 36: 57, 51: 67, 71: 91, 79: 96 };
-        const actionCellIndices = [3, 5, 8, 12, 15, 18, 22, 25, 29, 33, 37, 40, 44, 47, 50, 53, 57, 59, 60, 63, 66, 69, 71, 74, 77, 81, 83, 86, 88, 91, 92, 94, 96, 97, 99];
+        const actionCellIndices = [3, 5, 8, 12, 15, 18, 22, 25, 29, 33, 37, 40, 44, 47, 50, 53, 57, 59, 60, 63, 66, 69, 72, 74, 77, 81, 83, 86, 88, 91, 92, 94, 96, 97, 99];
 
         // چالش‌های مخصوص مرد
         const challengePool = {
@@ -1605,16 +1620,23 @@
             p2Token.innerText = p2Avatar;
             p2Token.title = p2Name;
 
+            // 🌟 تنظیم داینامیک فاصله‌ها: در موبایل مهره‌ها را به دورترین نقاط می‌فرستیم
+            let isMobile = window.innerWidth <= 600;
+            // در حالت عادی 10% فاصله دارن، در موبایل 0% (کاملا چسبیده به گوشه بالا-چپ)
+            let p1Offset = isMobile ? 0.0 : 0.1; 
+            // در حالت عادی 90% فاصله دارن، در موبایل 100% (کاملا چسبیده به گوشه پایین-راست)
+            let p2Offset = isMobile ? 1.0 : 0.9; 
+
             let cell1 = document.getElementById("cell-" + p1Pos);
             if (cell1) {
-                p1Token.style.left = (cell1.offsetLeft + cell1.offsetWidth * 0.1) + "px";
-                p1Token.style.top = (cell1.offsetTop + cell1.offsetHeight * 0.1) + "px";
+                p1Token.style.left = (cell1.offsetLeft + cell1.offsetWidth * p1Offset) + "px";
+                p1Token.style.top = (cell1.offsetTop + cell1.offsetHeight * p1Offset) + "px";
             }
 
             let cell2 = document.getElementById("cell-" + p2Pos);
             if (cell2) {
-                p2Token.style.left = (cell2.offsetLeft + cell2.offsetWidth * 0.9 - p2Token.offsetWidth) + "px";
-                p2Token.style.top = (cell2.offsetTop + cell2.offsetHeight * 0.9 - p2Token.offsetHeight) + "px";
+                p2Token.style.left = (cell2.offsetLeft + cell2.offsetWidth * p2Offset - p2Token.offsetWidth) + "px";
+                p2Token.style.top = (cell2.offsetTop + cell2.offsetHeight * p2Offset - p2Token.offsetHeight) + "px";
             }
 
             let maxPos = Math.max(p1Pos, p2Pos);
@@ -1820,8 +1842,7 @@
                     let modal = document.getElementById("action-modal");
                     document.getElementById("modal-title").innerText = "🎉 پیروزی داغ! 🎉";
                     document.getElementById("modal-text").innerText = 
-                        winnerName + " عزیز، تو برنده شدی!\nامشب جایزه ویژه‌ای داری... بدنت رو آماده کن برای یک شبِ فراموش‌نشدنی! 😉";
-                    
+                        winnerName + "ِ جذاب، تو برنده این بازی داغ شدی!\nامشب کنترل همه‌چیز کاملاً دست توئه. هر پوزیشنی که اراده کنی و هر فانتزی‌ای که تو سرت باشه، طرف مقابل باید بدون هیچ حرفی همون رو انجام بده... 😈\nخودت رو برای یک شبِ طولانی و پر از حرارت آماده کن! 🔥";
                     document.getElementById("joker-btn").style.display = "none";
                     document.getElementById("accept-modal-btn").innerText = "بزن بریم!";
                     modal.style.display = "flex";
