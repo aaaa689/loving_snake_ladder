@@ -461,7 +461,7 @@
 
         /* 📱 تنظیمات برای گوشی‌های موبایل (کمتر از 600px) */
         @media (max-width: 600px) {
-            body { padding: 50px 5px 5px 5px; }
+            body { padding: 80px 5px 5px 5px; }
             .game-wrapper {
                 flex-direction: column; 
                 padding: 5px;
@@ -486,7 +486,7 @@
 
             /* تاج پادشاهی خانه ۱۰۰ */
             #cell-100::before {
-                font-size: 1.38rem !important;
+                font-size: 1.1rem !important;
             }
             .control-panel {
                 flex: 0 0 auto;
@@ -558,6 +558,53 @@
             }
             #profile-logged-in.premium-active > div {
                 width: 100% !important;
+            }
+
+            /* 🌟 کوچک کردن مدال قوانین و تنظیمات بازی در موبایل 🌟 */
+            .modal-content {
+                padding: 15px !important;
+                width: 90% !important;
+                max-height: 90vh !important; /* جلوگیری از بیرون زدن در ارتفاع */
+            }
+
+            .modal-content h2 {
+                font-size: 1.2rem !important;
+                margin-bottom: 10px !important;
+            }
+
+
+            /* کوچک‌سازی مدال تنظیمات (آواتار و نام) */
+            .setup-section {
+                margin-bottom: 10px !important;
+            }
+            .setup-section label {
+                font-size: 0.8rem !important;
+            }
+            .setup-section input {
+                font-size: 0.85rem !important;
+                padding: 8px !important;
+                margin-top: 5px !important;
+            }
+            .avatar-selection {
+                gap: 8px !important; /* کاهش فاصله بین آواتارها */
+                margin-top: 8px !important;
+            }
+            .avatar-option {
+                font-size: 2.1rem !important; /* آواتارها ظریف‌تر شدند */
+                padding: 3px !important;
+            }
+
+            /* بهینه‌سازی دکمه‌ها و دکمه خروج در موبایل */
+            .modal-content .accept-btn {
+                font-size: 0.9rem !important;
+                padding: 8px 15px !important;
+                margin-top: 10px !important;
+            }
+            
+            .close-btn {
+                font-size: 1.2rem !important;
+                top: 8px !important;
+                right: 12px !important;
             }
         }
 
