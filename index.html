@@ -1117,7 +1117,11 @@
         }
 
         function useJoker() {
-            if (currentPlayer === 1) p1Joker = false; else p2Joker = false;
+            // خواندن بازیکنی که چالش برای او باز شده است
+            let activePlayer = parseInt(document.getElementById("joker-btn").getAttribute("data-player"));
+            
+            if (activePlayer === 1) p1Joker = false; else p2Joker = false;
+            
             document.getElementById("joker-btn").style.display = "none";
             document.getElementById("modal-title").innerText = "🃏 کارت انتقام! 🃏";
             document.getElementById("modal-text").innerText = "چالش برعکس شد! حالا طرف مقابل باید این کار رو انجام بده 😈\n\n" + document.getElementById("modal-text").innerText;
@@ -1755,14 +1759,15 @@
             document.getElementById("setup-modal").style.display = "flex";
         }
 
-        function checkForActions(pos) {
+        function checkForActions(pos, activePlayer) {
             if (actionCellIndices.includes(pos)) {
                 let level = "";
                 if (pos <= 30) level = "level1";
                 else if (pos <= 70) level = "level2";
                 else level = "level3";
 
-                let gender = (currentPlayer === 1) ? 'female' : 'male';
+                // 🌟 حالا مستقیماً چک می‌کنیم که تاس را چه کسی ریخته است
+                let gender = (activePlayer === 1) ? 'male' : 'female';
                 let pool = challengePool[level][gender];
                 let randomChallenge = pool[Math.floor(Math.random() * pool.length)];
             
@@ -1770,8 +1775,13 @@
                 document.getElementById("modal-title").innerText = "چالش عاشقانه! 💌";
                 document.getElementById("modal-text").innerText = randomChallenge;
                 
-                let hasJoker = (currentPlayer === 1) ? p1Joker : p2Joker;
-                document.getElementById("joker-btn").style.display = hasJoker ? "inline-block" : "none";
+                let hasJoker = (activePlayer === 1) ? p1Joker : p2Joker;
+                let jokerBtn = document.getElementById("joker-btn");
+                jokerBtn.style.display = hasJoker ? "inline-block" : "none";
+                
+                // 🌟 ذخیره می‌کنیم که چالش برای چه کسی است تا جوکر اشتباهی کم نشود
+                jokerBtn.setAttribute("data-player", activePlayer);
+
                 document.getElementById("accept-modal-btn").innerText = "انجامش می‌دیم!";
             
                 document.getElementById("action-modal").style.display = "flex";
@@ -1876,7 +1886,8 @@
                 } 
                 else if (actionCellIndices.includes(targetPos)) {
                     if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                    checkForActions(targetPos);
+                    // متغیر player را که در ابتدای این تابع تعریف شده پاس می‌دهیم
+                    checkForActions(targetPos, player);
                 }
             }, 300);
 
