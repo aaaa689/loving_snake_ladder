@@ -1107,6 +1107,8 @@
             }
         };
 
+        let activeChallengePool = JSON.parse(JSON.stringify(challengePool));
+
         function selectAvatar(playerNum, element, avatar) {
             let siblings = element.parentElement.children;
             for(let i=0; i<siblings.length; i++){
@@ -1766,10 +1768,22 @@
                 else if (pos <= 70) level = "level2";
                 else level = "level3";
 
-                // 🌟 حالا مستقیماً چک می‌کنیم که تاس را چه کسی ریخته است
                 let gender = (activePlayer === 1) ? 'male' : 'female';
-                let pool = challengePool[level][gender];
-                let randomChallenge = pool[Math.floor(Math.random() * pool.length)];
+                
+                // ۱. دریافت آرایه مربوطه از "مخزن فعال"
+                let activeArray = activeChallengePool[level][gender];
+
+                // ۲. انتخاب یک چالش تصادفی از بین موارد باقی‌مانده
+                let randomIndex = Math.floor(Math.random() * activeArray.length);
+                let randomChallenge = activeArray[randomIndex];
+
+                // ۳. حذف چالش انتخاب شده از آرایه فعال
+                activeArray.splice(randomIndex, 1);
+
+                // ۴. بررسی اینکه آیا آرایه خالی شده است؟ اگر بله، شارژ مجدد از روی مخزن اصلی
+                if (activeArray.length === 0) {
+                    activeChallengePool[level][gender] = [...challengePool[level][gender]];
+                }
             
                 heartSound.currentTime = 0; heartSound.play();
                 document.getElementById("modal-title").innerText = "چالش عاشقانه! 💌";
@@ -1779,7 +1793,6 @@
                 let jokerBtn = document.getElementById("joker-btn");
                 jokerBtn.style.display = hasJoker ? "inline-block" : "none";
                 
-                // 🌟 ذخیره می‌کنیم که چالش برای چه کسی است تا جوکر اشتباهی کم نشود
                 jokerBtn.setAttribute("data-player", activePlayer);
 
                 document.getElementById("accept-modal-btn").innerText = "انجامش می‌دیم!";
