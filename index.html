@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مار و پله عاشقانه ❤️</title>
     <style>
-        @import url('https://v1.fontapi.ir/css/Vazir');
+         @font-face {
+            font-family: 'MyNazanin';
+            src: url('fonts/Vazir.ttf') format('truetype');
+            font-weight: normal; font-style: normal;
+        }
 
         * {
             box-sizing: border-box;
-            font-family: 'Vazir', sans-serif;
+            font-family: 'MyNazanin', sans-serif;
         }
 
         /* قفل کردن ارتفاع به اندازه مانیتور و جلوگیری از اسکرول */
@@ -24,7 +28,11 @@
             justify-content: center;
             align-items: center;
             overflow: hidden; 
+            transition: background 2s ease, box-shadow 2s ease; 
         }
+
+        .joker-btn { background: linear-gradient(45deg, #8338ec, #3a0ca3); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; width: 100%; display: none; }
+        .joker-btn:hover { transform: scale(1.02); }
 
         .game-wrapper {
             background: rgba(0, 0, 0, 0.6);
@@ -33,15 +41,14 @@
             box-shadow: 0 0 20px rgba(255, 50, 100, 0.3);
             width: 100%;
             height: 100%; 
-            max-width: 1300px;
+            max-width: 1600px;
             display: flex;
             flex-direction: row; 
             gap: 20px;
         }
 
-        /* --- پنل تنظیمات در سمت راست --- */
         .control-panel {
-            flex: 0 0 260px; 
+            flex: 0 0 300px; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -89,10 +96,9 @@
             border: none;
             padding: 12px 20px;
             font-size: 1.2rem;
-            border-radius: 50px;
+            border-radius: 10px;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            font-family: 'Vazir';
             font-weight: bold;
             width: 100%;
         }
@@ -109,7 +115,6 @@
             transform: none;
         }
 
-        /* --- استایل‌های تاس ۳ بعدی --- */
         .dice-scene {
             width: 60px;
             height: 60px;
@@ -151,7 +156,6 @@
         .dice__face--2 { transform: rotateX( 90deg) translateZ(30px); }
         .dice__face--5 { transform: rotateX(-90deg) translateZ(30px); }
 
-        /* --- استایل بورد بزرگ و داینامیک --- */
         .board-container {
             position: relative;
             flex: 1; 
@@ -172,8 +176,6 @@
             padding: 5px;
             border-radius: 12px;
             border: 3px solid #590d22;
-            
-            /* جادوی حفظ ابعاد مربع در مانیتورهای بزرگ */
             width: 100%;
             max-width: 96vh;
             width: 96vh; 
@@ -198,7 +200,7 @@
             position: relative;
             border-radius: 5px;
             font-weight: bold;
-            font-size: clamp(0.7rem, 1.5vmin, 1.2rem); 
+            font-size: clamp(1.2rem, 2vmin, 1.7rem); 
             color: rgba(255, 255, 255, 0.5);
             overflow: hidden;
         }
@@ -218,7 +220,54 @@
             font-size: clamp(1rem, 2vmin, 1.5rem);
         }
 
-        /* --- مهره‌های انیمیشن‌دار (آواتارها) --- */
+        #cell-100 {
+            background: linear-gradient(135deg, #ffd700, #ff006e, #8338ec) !important;
+            color: #fff !important;
+            border: 3px solid #fff;
+            box-shadow:
+                0 0 15px #ffd700,
+                0 0 30px #ff006e,
+                inset 0 0 15px rgba(255,255,255,0.5);
+            animation: finalCellGlow 1.2s infinite alternate;
+        }
+
+        #cell-100::before {
+            content: "👑";
+            position: absolute;
+            font-size: 2.3rem;
+            animation: crownFloat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes finalCellGlow {
+            from { transform: scale(1); filter: brightness(1); }
+            to { transform: scale(1.06); filter: brightness(1.3); }
+        }
+
+        @keyframes crownFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- استایل آیتم‌های کیف پشتی --- */
+        .item-icon { position: absolute; font-size: 1.7rem; top: 2px; left: 2px; animation: bounceItem 1s infinite alternate; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); z-index: 5; }
+        @keyframes bounceItem { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+
+        .firework {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(8); opacity: 0; }
+        }
+
         .player-token {
             width: 20px;
             height: 20px;
@@ -226,13 +275,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem; 
+            font-size: 2rem; 
             transition: left 0.35s ease-in-out, top 0.35s ease-in-out; 
             z-index: 10;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
 
-        /* --- پنجره‌های پاپ‌آپ (Modal) --- */
         .modal {
             display: none;
             position: fixed;
@@ -247,13 +295,97 @@
             backdrop-filter: blur(5px);
         }
 
+        /* 🌟 کوچک‌سازی سراسری مدال ورود و ثبت‌نام برای جلوگیری از اسکرول در تمامی دستگاه‌ها 🌟 */
+        #auth-modal .modal-content {
+            padding: 15px 20px !important; /* کاهش شدید فضای خالی دور مدال */
+            max-width: 340px !important; /* عرض جمع و جورتر */
+        }
+
+        #auth-modal .close-btn {
+            top: 5px !important;
+            right: 12px !important;
+            font-size: 1.3rem !important;
+        }
+
+        #auth-modal h2 {
+            font-size: 1.2rem !important;
+            margin-bottom: 8px !important;
+        }
+
+        #auth-modal p {
+            font-size: 0.75rem !important;
+            line-height: 1.4 !important;
+            margin-bottom: 10px !important;
+            margin-top: 10px !important;
+        }
+
+        /* فشرده‌سازی کادرهای متنی و لیبل‌ها */
+        #auth-modal .setup-section label {
+            font-size: 0.75rem !important;
+            margin-top: 2px !important;
+            margin-bottom: 0px !important;
+        }
+
+        #auth-modal .setup-section input:not([type="checkbox"]) {
+            font-size: 0.85rem !important;
+            padding: 6px 10px !important; /* ارتفاع کادرها بسیار کمتر شد */
+            margin-top: 2px !important;
+            margin-bottom: 6px !important; /* فاصله بین اینپوت‌ها بسیار کمتر شد */
+        }
+
+        /* فشرده‌سازی کادر توضیحات (صورتی رنگ) در بخش ثبت نام */
+        #register-form > div:first-child {
+            padding: 6px !important;
+            margin-bottom: 8px !important;
+            font-size: 0.8rem !important;
+        }
+
+        /* تنظیم بخش چک‌باکس و قوانین */
+        #auth-modal div[style*="text-align: right; margin: 15px 5px;"] {
+            margin: 15px 0 !important;
+        }
+        
+        #auth-modal label[for="reg-terms"] {
+            font-size: 0.75rem !important;
+        }
+
+        /* دکمه‌های تایید */
+        #auth-modal .accept-btn {
+            font-size: 0.9rem !important;
+            padding: 6px 15px !important;
+            margin-top: 5px !important;
+            margin-bottom: 0 !important;
+        }
+
+        #shield-status{
+            background: rgba(42, 157, 143, 0.3);
+            border: 1px solid #2a9d8f;
+            color: #fff; 
+            padding: 8px; 
+            border-radius: 8px; 
+            text-align: center; 
+            font-size: 1rem; 
+            font-weight: bold; 
+            display: none;
+        }
+
+        #magic-dice-btn{
+            background: linear-gradient(45deg, #0077b6, #00b4d8); 
+            color: white; 
+            display: none; 
+            margin: 0px; 
+            padding: 8px 6px; 
+            font-size: 1rem;
+
+        }
+
         .modal-content {
             background: linear-gradient(135deg, #590d22, #800f2f);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            max-width: 450px;
-            width: 100%;
+            max-width: 400px;
+            width: 90%;
             border: 2px solid #ff4d6d;
             box-shadow: 0 0 30px #ff4d6d;
             position: relative;
@@ -283,26 +415,52 @@
             padding: 10px 25px;
             border-radius: 8px;
             font-weight: bold;
-            font-family: 'Vazir';
             font-size: 1.1rem;
-            margin-top: 15px;
+            display: block;
+            margin: 15px auto 0 auto;
             cursor: pointer;
             transition: 0.2s;
         }
+
+        #inventory-panel{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            #inventory-panel div{
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            #inventory-panel button{
+                width: 100%;
+            }
+            
         .accept-btn:hover { transform: scale(1.05); }
 
-        /* فرم تنظیمات */
-        .setup-section { margin-bottom: 20px; text-align: right; }
+        .setup-section { margin-bottom: 0px; text-align: right; }
         .setup-section label { font-weight: bold; color: #ffb703; font-size: 0.9rem; }
-        .setup-section input { width: 100%; padding: 10px; margin-top: 8px; border-radius: 8px; border: 1px solid #ff4d6d; background: rgba(0, 0, 0, 0.4); color: white; font-family: 'Vazir'; font-size: 1rem; }
+        .setup-section input { width: 100%; padding: 10px; margin-top: 8px; border-radius: 8px; border: 1px solid #ff4d6d; background: rgba(0, 0, 0, 0.4); color: white; font-size: 1rem; }
         .setup-section input:focus { outline: none; border-color: #ffb703; }
         .avatar-selection { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 12px; justify-content: center; }
         .avatar-option { font-size: 1.8rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; border: 2px solid transparent; user-select: none; }
         .avatar-option:hover { transform: scale(1.2); }
         .avatar-option.selected { border-color: #ffb703; background: rgba(255, 183, 3, 0.2); transform: scale(1.1); }
 
-        /* --- ریسپانسیو اختصاصی برای موبایل --- */
-        @media (max-width: 660px) {
+        /* مخفی کردن اسکرول‌بار برای مرورگرهای کروم، سافاری و اپرا */
+        .modal-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* مخفی کردن اسکرول‌بار برای مرورگرهای فایرفاکس و اِج */
+        .modal-content {
+            -ms-overflow-style: none;  /* برای IE و Edge */
+            scrollbar-width: none;  /* برای Firefox */
+        }
+
+        /* 📱 تنظیمات برای گوشی‌های موبایل (کمتر از 600px) */
+        @media (max-width: 600px) {
             body { padding: 5px; }
             .game-wrapper {
                 flex-direction: column; 
@@ -310,26 +468,29 @@
                 gap: 5px;
                 border-radius: 10px;
             }
-            .board {
-                gap: 2px; /* فاصله ثابت و زیبا در موبایل */
-                padding: 3px;
-                border-width: 2px;
-                border-radius: 8px;
+            .board { 
+                gap: 2px; padding: 3px; border-width: 2px; border-radius: 8px; 
+                height: auto; width: 100%; max-height: 60vh; aspect-ratio: 1 / 1; margin: 0 auto;
             }
-            .cell {
-                border-radius: 3px;
-            }
+            .cell { border-radius: 3px; }
             .control-panel {
                 flex: 0 0 auto;
                 flex-direction: row; 
                 width: 100%;
                 height: auto;
-                padding: 10px 15px;
-                gap: 15px;
+                padding: 10px;
+                gap: 8px;
                 border-radius: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
             }
             .header-compact { display: none; } 
-            .turn-box { font-size: 1rem; width: auto; flex: 1; padding: 8px; }
+            
+            /* چیدمان پروفایل و نوبت کنار هم */
+            #profile-box { width: 48%; margin: 0; padding: 6px; font-size: 0.8rem; }
+            .turn-box { font-size: 0.9rem; width: 48%; padding: 6px; flex: unset; }
+
             .dice-scene { width: 40px; height: 40px; margin: 0; }
             .dice__face { width: 40px; height: 40px; font-size: 20px; }
             .dice__face--1 { transform: rotateY(  0deg) translateZ(20px); }
@@ -339,42 +500,89 @@
             .dice__face--2 { transform: rotateX( 90deg) translateZ(20px); }
             .dice__face--5 { transform: rotateX(-90deg) translateZ(20px); }
             
-            #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; }
-            .player-token {
-                font-size: 1.2rem; 
+            #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; flex: 1; }
+            .player-token { font-size: 1.2rem; }
+
+            /* چیدمان کیف‌پشتی در موبایل */
+            #inventory-panel{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 8px;
+                width: 100%;
+            }
+            #inventory-panel div{ width: 48%; margin-bottom: 0px; font-size: 0.8rem; padding: 6px; }
+            #inventory-panel button{ width: 48%; font-size: 0.8rem; padding: 6px; }
+            /* چیدمان ستونی پروفایل در موبایل (دکمه زیر نام کاربری) */
+            #profile-logged-in {
+                flex-direction: column !important; /* چیدمان زیر هم */
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 8px !important;
+            }
+            
+            /* تنظیم بخش نام کاربری و نشانگر (ردیف بالا) */
+            #profile-logged-in > div {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important; 
+                flex-wrap: wrap !important;
+            }
+            
+            /* تنظیم دکمه خرید اشتراک (ردیف پایین) */
+            #direct-buy-btn {
+                width: 100% !important; /* عرض کامل باکس */
+                margin-top: 2px !important;
+                padding: 8px !important; /* کمی پدینگ بیشتر برای راحتی لمس در موبایل */
+                font-size: 1rem !important;
+                white-space: normal !important; 
+            }
+
+            #profile-logged-in.premium-active {
+                justify-content: center !important;
+            }
+            #profile-logged-in.premium-active > div {
+                width: 100% !important;
             }
         }
 
-        @media (min-width: 660px) and (max-width: 1080px) {
-            body { padding: 15px; }
+        /* 💻 تنظیمات برای تبلت‌ها و مانیتورهای کوچک (600px تا 1080px) */
+        @media (min-width: 600px) and (max-width: 1180px) {
+            body { padding: 10px; }
             .game-wrapper {
                 flex-direction: column; 
                 padding: 10px;
                 gap: 10px;
                 border-radius: 16px;
             }
-            .board {
-                gap: 2.5px; /* فاصله ثابت و زیبا در موبایل */
-                padding: 2px;
-                border-width: 3px;
-                border-radius: 8px;
-                height: 82vh;
-                width: 82vh;
+            .board { 
+                gap: 2.5px; padding: 2px; border-width: 3px; border-radius: 8px; 
+                height: auto; 
+                width: 100%; 
+                max-width: 75vh; /* محدود کردن سایز بورد به نسبت ارتفاع */
+                max-height: 70vh; 
+                margin: 0 auto;
+                aspect-ratio: 1 / 1; 
             }
-            .cell {
-                border-radius: 6px;
-            }
+            .cell { border-radius: 6px; }
             .control-panel {
                 flex: 0 0 auto;
                 flex-direction: row; 
+                flex-wrap: wrap;
                 width: 100%;
                 height: auto;
                 padding: 10px 15px;
-                gap: 15px;
+                gap: 10px;
                 border-radius: 10px;
+                justify-content: center;
+                align-items: center;
             }
             .header-compact { display: none; } 
-            .turn-box { font-size: 1rem; width: auto; flex: 1; padding: 8px; }
+            
+            /* قرار دادن پروفایل و نوبت در یک ردیف */
+            #profile-box { width: 48%; margin: 0; padding: 8px; font-size: 0.9rem; }
+            .turn-box { font-size: 0.95rem; width: 48%; padding: 8px; flex: unset; }
+            
             .dice-scene { width: 40px; height: 40px; margin: 0; }
             .dice__face { width: 40px; height: 40px; font-size: 20px; }
             .dice__face--1 { transform: rotateY(  0deg) translateZ(20px); }
@@ -384,23 +592,217 @@
             .dice__face--2 { transform: rotateX( 90deg) translateZ(20px); }
             .dice__face--5 { transform: rotateX(-90deg) translateZ(20px); }
             
-            #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; }
-            .player-token {
-                font-size: 1.2rem; 
+            #roll-btn { width: auto; padding: 8px 15px; font-size: 1rem; flex: 1; }
+            .player-token { font-size: 1.6rem; }
+
+            /* قرار دادن آیتم‌های کیف پشتی در یک ردیف */
+            #inventory-panel{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+                width: 100%;
+            }
+            #inventory-panel div{ width: 48%; margin-bottom: 0px; font-size: 0.85rem; padding: 6px; }
+            #inventory-panel button{ width: 48%; font-size: 0.85rem; padding: 3px; }
+
+            #profile-logged-in {
+                flex-direction: row !important; /* قرارگیری در یک خط */
+                flex-wrap: nowrap !important; /* جلوگیری از رفتن به خط بعد */
+                justify-content: space-between !important;
+                align-items: center !important;
+                gap: 8px !important;
+            }
+
+            /* تنظیم بخش نام کاربری و نشانگر */
+            #profile-logged-in > div {
+                width: 50% !important;
+                justify-content: center !important; 
+            }
+
+            /* تنظیم دکمه خرید اشتراک */
+            #direct-buy-btn {
+                width: 50% !important;
+                margin-top: 0 !important;
+                padding: 6px !important;
+                font-size: 0.95rem !important;
+                white-space: nowrap !important; /* جلوگیری از شکستن متن دکمه */
+            }
+
+            #profile-logged-in.premium-active {
+                justify-content: center !important;
+            }
+            #profile-logged-in.premium-active > div {
+                width: 100% !important;
             }
         }
+
+        /* 🖥️ تنظیمات برای مانیتورهای بزرگ (بزرگتر از 1080px) */
+                /* 🖥️ تنظیمات برای مانیتورهای بزرگ (بزرگتر از 1080px) */
+               /* 🖥️ تنظیمات برای مانیتورهای بزرگ (بزرگتر از 1080px) */
+        @media (min-width: 1180px) {
+            /* کاهش فاصله بین المان‌ها برای جلوگیری از روی هم افتادن (کاهش gap) */
+            .control-panel { 
+                gap: 15px !important; 
+            }
+
+            .header-compact h1 { font-size: 1.8rem; } 
+            .header-compact p { font-size: 0.95rem; }  
+            
+            /* اصلاح سایز بخش پروفایل */
+            #profile-box { font-size: 0.9rem; padding: 10px; margin: 0; } 
+            #profile-box .accept-btn { font-size: 1rem !important; padding: 6px 12px !important; } 
+
+            .turn-box { font-size: 1.1rem; padding: 10px; } 
+            #roll-btn { font-size: 1.2rem; padding: 10px 15px; } 
+            #shield-status, #magic-dice-btn { font-size: 0.95rem; padding: 8px; } 
+
+            /* منطقی کردن سایز مدال‌ها و متن‌های داخلشان */
+            .modal-content { max-width: 420px; padding: 25px; } 
+            #auth-modal .modal-content { max-width: 380px !important; } 
+            .modal-content h2 { font-size: 1.5rem !important; } 
+            .modal-content p { font-size: 1rem !important; } 
+            #rules-modal ul { font-size: 1rem !important; line-height: 1.8 !important; } 
+            
+            
+            .accept-btn, .joker-btn { font-size: 1rem; padding: 8px 20px; } 
+            .setup-section label { font-size: 0.9rem; } 
+            .setup-section input { font-size: 1rem; padding: 10px; } 
+            .avatar-option { font-size: 1.8rem; } 
+            .close-btn { font-size: 1.5rem; right: 15px; top: 10px; } 
+
+            /* اصلاح سایز تاس به حالت استاندارد تا روی دکمه‌ها نیفتد */
+            .dice-scene { width: 60px; height: 60px; margin: 10px 0; } 
+            .dice__face { width: 60px; height: 60px; font-size: 32px; border-width: 3px; } 
+            .dice__face--1 { transform: rotateY(  0deg) translateZ(30px); } 
+            .dice__face--6 { transform: rotateY(180deg) translateZ(30px); }
+            .dice__face--3 { transform: rotateY( 90deg) translateZ(30px); }
+            .dice__face--4 { transform: rotateY(-90deg) translateZ(30px); }
+            .dice__face--2 { transform: rotateX( 90deg) translateZ(30px); }
+            .dice__face--5 { transform: rotateX(-90deg) translateZ(30px); }
+        }
+
 
     </style>
 </head>
 <body>
+    <div id="flames-container"></div>
 
-    <div id="setup-modal" class="modal" style="display: flex;">
+    <div id="auth-modal" class="modal" style="display: none; z-index: 200;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('auth-modal').style.display='none'">&times;</span>
+            <h2 id="auth-title" style="color: #ff4d6d; margin-top: 0; text-align: center;">ادامه ماجراجویی 🔐</h2>
+            
+            <div id="login-form" class="setup-section" style="text-align: center; direction: rtl;">
+                <p style="color: #ffb703; font-size: 0.95rem; text-align: center; margin-bottom: 20px; line-height: 1.6;">
+                    شما به مرز خانه‌های داغ (۴۰) رسیدید! 🔥<br>برای ادامه بازی تا خانه ۱۰۰ و باز کردن چالش‌های خصوصی، باید وارد حساب کاربری خود شوید و نسخه کامل را تهیه کنید.
+                </p>
+                <input type="text" id="login-username" placeholder="نام کاربری یا ایمیل">
+                <input type="password" id="login-password" placeholder="رمز عبور">
+                <button class="accept-btn" onclick="loginUser()">ورود و ادامه بازی</button>
+                <p style="color: #ccc; font-size: 0.95rem; text-align: center; cursor: pointer; margin-top: 20px; transition: 0.2s;" onclick="toggleAuth('register')">
+                    حساب ندارید؟ <b style="color:#ffb703;">ثبت‌نام</b>
+                </p>
+            </div>
+
+            <div id="register-form" class="setup-section" style="display: none; text-align: right; direction: rtl;">
+                <div style="background: rgba(255, 77, 109, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 109, 0.3); margin-bottom: 15px; font-size: 0.88rem; color: #eee; line-height: 1.6;">
+                    💝 <b>به جمع ما خوش آمدید!</b><br>
+                    با ساخت حساب کاربری و خرید اشتراک:<br>
+                    ✨ پیشرفت شما ذخیره می‌شود.<br>
+                    🛡️ آیتم‌های کیف‌پشتی شما پاک نمی‌شوند.<br>
+                    🔓 قفل چالش‌های سطح‌های بالاتر باز می‌گردد.
+                </div>
+                
+                <label>نام کاربری:</label>
+                <input type="text" id="reg-username" placeholder="مثلا: یار_همیشگی">
+                
+                <label>ایمیل:</label>
+                <input type="email" id="reg-email" placeholder="example@gmail.com">
+                
+                <label>رمز عبور:</label>
+                <input type="password" id="reg-password" placeholder="حداقل ۶ کاراکتر">
+                
+                <label>تکرار رمز عبور:</label>
+                <input type="password" id="reg-confirm-password" placeholder="تکرار رمز عبور">
+                
+                <div style="text-align: right; margin: 15px 5px; font-size: 0.85rem; color: #fff; line-height: 1.5;">
+                    <input type="checkbox" id="reg-terms" style="width: auto; margin-left: 5px; display: inline-block; vertical-align: middle;">
+                    <label for="reg-terms" style="display: inline; color: #ffb703; cursor: pointer;">پیمان‌نامه عاشقانه بازی را می‌پذیرم. ❤️</label>
+                </div>
+
+                <button class="accept-btn" onclick="registerUser()" style="background: linear-gradient(45deg, #ff4d6d, #ff006e); color: white; width: 100%;">ایجاد حساب و ورود ✨</button>
+                
+                <p style="color: #ccc; font-size: 0.95rem; text-align: center; cursor: pointer; margin-top: 20px; transition: 0.2s;" onclick="toggleAuth('login')">
+                    حساب دارید؟ <b style="color:#ffb703;">وارد شوید</b>
+                </p>
+            </div>
+
+            <div id="subscription-form" class="setup-section" style="display: none; text-align: center; direction: rtl;">
+                <h3 style="color: #00b4d8; margin-bottom: 15px;">خرید اشتراک یکماهه 💎</h3>
+                
+                <div style="background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 10px; border: 1px dashed #00b4d8; margin-bottom: 20px;">
+                    <p style="color: white; font-size: 1.1rem; margin: 5px 0;">دسترسی کامل به خانه‌های ۴۰ تا ۱۰۰</p>
+                    <p style="color: #ff4d6d; font-size: 1.1rem; margin: 5px 0;">باز شدن تمام چالش‌های سطح ۳</p>
+                    <h2 style="color: #ffb703; margin: 15px 0 5px 0;">مبلغ: ۵۰,۰۰۰ تومان</h2>
+                </div>
+
+                <button class="accept-btn" onclick="startPaymentProcess()" style="background: linear-gradient(45deg, #00b4d8, #0077b6); color: white; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <span>پرداخت امن از طریق شاپرک</span>
+                    <span style="font-size: 1.5rem;">💳</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="rules-modal" class="modal" style="display: flex;">
+        <div class="modal-content" style="text-align: right; direction: rtl;">
+            <h2 style="color: white; margin-top: 0; text-align: center; font-size: 1.6rem;">قوانین و آموزش بازی 📜</h2>
+            <p style="color: #ffb703; font-size: 0.95rem; text-align: center; margin-bottom: 20px;">خوش آمدید! لطفاً قبل از شروع، این راهنما را با دقت بخوانید تا برنده‌ی امشب باشید.</p>
+            
+            <ul style="color: #ddd; line-height: 1.9; font-size: 1.05rem; padding-right: 20px; text-align: right; margin-bottom: 0;">
+                <li style="margin-bottom: 15px;">
+                    🎯 <b>هدف اصلی:</b><br> 
+                    شما از خانه شماره ۱ شروع می‌کنید. به نوبت تاس می‌ریزید و به سمت بالا می‌روید. اولین نفری که به خانه ۱۰۰ (تاج پادشاهی 👑) برسد، برنده است و جایزه ویژه امشب متعلق به اوست!
+                </li>
+                
+                <li style="margin-bottom: 15px;">
+                    🐍 <b>مارها و پله‌ها:</b><br>
+                    اگر روی پایینِ یک پله متوقف شوید، از آن بالا می‌روید و میانبر می‌زنید. اما مراقب باشید! اگر دقیقاً روی سر یک مار بیفتید، نیش می‌خورید و تا دُمِ مار به پایین سقوط می‌کنید.
+                </li>
+                
+                <li style="margin-bottom: 15px;">
+                    ❤️ <b>خانه‌های چالش (رنگ طلایی):</b><br>
+                    در طول مسیر خانه‌هایی وجود دارند که متمایز هستند. اگر روی آن‌ها بیفتید، یک پنجره باز می‌شود و از شما می‌خواهد یک کار عاشقانه یا شیطنت‌آمیز برای طرف مقابل انجام دهید. انجام این چالش‌ها اجباری و کُلِ مزه‌ی بازی به همین‌هاست!
+                </li>
+                
+                <li style="margin-bottom: 15px;">
+                    🛡️ <b>سپر محافظ:</b><br>
+                    گاهی آیکون سپر (🛡️) روی زمین افتاده است. اگر روی آن متوقف شوید، سپر را برمی‌دارید (در پنل شما فعال می‌شود). <b>خاصیتش چیست؟</b> دفعۀ بعدی که روی نیش مار بیفتید، سپر به طور خودکار فدا می‌شود و جلوی سقوط شما را می‌گیرد!
+                </li>
+                
+                <li style="margin-bottom: 15px;">
+                    🎲 <b>تاس جادویی:</b><br>
+                    اگر آیکون تاس (🎲) را از روی زمین بردارید، دکمه‌ی آبی‌رنگِ «تاس جادویی» برایتان فعال می‌شود. هر وقت نوبت شما شد، به جای تاس ریختنِ شانسی، می‌توانید این دکمه را بزنید تا <b>دقیقاً ۳ قدم</b> جلو بروید. (بهترین راه برای فرار از مارهای نزدیک یا افتادن روی پله‌ها).
+                </li>
+                
+                <li style="margin-bottom: 5px;">
+                    🃏 <b>کارت انتقام (جوکر):</b><br>
+                    وقتی چالشی برایتان می‌آید، یک دکمه بنفش می‌بینید. هر بازیکن در <b>کُلِ بازی فقط یک‌بار</b> حق استفاده از آن را دارد. با زدن این دکمه، می‌توانید از زیر چالش در بروید و طرف مقابل را مجبور کنید آن کار را برای شما انجام دهد!
+                </li>
+            </ul>
+            <button class="accept-btn" onclick="showSetup()" style="margin-top: 25px;">بریم برای شروع! 💕</button>
+        </div>
+    </div>
+
+    <div id="setup-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2 style="color: white; margin-top: 0;">تنظیمات بازی 💑</h2>
             
             <div class="setup-section">
                 <label>اسم بازیکن ۱ (آقا):</label>
-                <input type="text" id="p1-name-input" placeholder="مثلا: علی">
+                <input type="text" id="p1-name-input" placeholder="مثلا: مهدی">
                 <div class="avatar-selection" id="p1-avatars">
                     <span class="avatar-option selected" onclick="selectAvatar(1, this, '👨🏻')">👨🏻</span>
                     <span class="avatar-option" onclick="selectAvatar(1, this, '🍆')">🍆</span>
@@ -417,7 +819,7 @@
 
             <div class="setup-section">
                 <label>اسم بازیکن ۲ (خانم):</label>
-                <input type="text" id="p2-name-input" placeholder="مثلا: نازنین">
+                <input type="text" id="p2-name-input" placeholder="مثلا: ساناز">
                 <div class="avatar-selection" id="p2-avatars">
                     <span class="avatar-option selected" onclick="selectAvatar(2, this, '👩🏻')">👩🏻</span>
                     <span class="avatar-option" onclick="selectAvatar(2, this, '❤️‍🔥')">❤️‍🔥</span>
@@ -443,8 +845,22 @@
                 <p>با هر تاس، یک قدم نزدیک‌تر...</p>
             </div>
 
+            <div id="profile-box" style="width: 100%; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; text-align: center; font-size: 0.95rem; border: 1px solid rgba(255, 77, 109, 0.3); margin-top: 0px;">
+                <div id="profile-logged-in" style="display: none; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: nowrap;">
+                        <span style="white-space: nowrap;">👤 نام کاربری:</span>
+                        <span id="profile-username" style="color: #ffb703; font-weight: bold; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;"></span>
+                        <span id="premium-badge" style="font-size: 0.8rem; padding: 2px 6px; border-radius: 5px; border: 1px solid; white-space: nowrap; display: inline-block;"></span>
+                    </div>
+                    <button id="direct-buy-btn" class="accept-btn" style="width: 100%; margin-top: 4px; padding: 6px 12px; font-size: 1.1rem; background: linear-gradient(45deg, #00b4d8, #0077b6); color: white; display: none;" onclick="openAuthModal()">خرید اشتراک ویژه 💎</button>
+                </div>
+                <div id="profile-logged-out">
+                    <button class="accept-btn" style="width: 100%; margin-top: 0px; padding: 4px 12px; font-size: 1.1rem; display: block; font-weight: bold;" onclick="openAuthModal()">ورود / عضویت 🔑</button>
+                </div>
+            </div>
+
             <div class="turn-box">
-                <p id="turn-indicator" style="margin:0;">نوبت: ...</p>
+                <p id="turn-indicator" style="margin:0;">نوبت ...</p>
             </div>
             
             <div class="dice-scene">
@@ -459,11 +875,21 @@
             </div>
 
             <button id="roll-btn" onclick="rollDice()">تاس بریز 🎲</button>
+
+            <div id="inventory-panel" style="width: 100%; display: flex; margin-top: 5px;">
+                <div id="shield-status">
+                    🛡️ سپر محافظ 
+                </div>
+                <button id="magic-dice-btn" class="accept-btn" onclick="useMagicDice()">
+                    تاس جادویی 🎲 (۳ قدم)
+                </button>
+            </div>
         </div>
 
         <div class="board-container">
-            <div id="board" class="board"></div>
-            <canvas id="snakes-ladders-canvas"></canvas>
+            <div id="board" class="board">
+                <canvas id="snakes-ladders-canvas"></canvas>
+            </div>
         </div>
     </div>
 
@@ -472,11 +898,16 @@
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 id="modal-title">چالش عاشقانه! 💌</h2>
             <p id="modal-text"></p>
-            <button class="accept-btn" onclick="closeModal()">انجامش می‌دیم!</button>
+            <button id="joker-btn" class="joker-btn" onclick="useJoker()">🃏 استفاده از کارت انتقام!</button>
+            <button id="accept-modal-btn" class="accept-btn" onclick="closeModal()">انجامش می‌دیم!</button>
         </div>
     </div>
 
     <script>
+        let isPremium = false; // وضعیت خرید و دسترسی کاربر به نسخه کامل
+        let loggedInUser = null;
+
+
         // متغیرهای شخصی‌سازی
         let p1Name = "مرد";
         let p2Name = "زن";
@@ -493,7 +924,16 @@
         // تابع توقف برای ایجاد انیمیشن حرکت دانه دانه
         const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-        // --- تعریف صداها ---
+        let p1Joker = true; // کارت انتقام آقا
+        let p2Joker = true; // کارت انتقام خانم
+
+        // متغیرهای کیف‌پشتی
+        let p1Inventory = { shield: 1, magicDice: 1 };
+        let p2Inventory = { shield: 1, magicDice: 1 };
+        let itemCells = {}; 
+
+
+        // --- تعریف صداها دقیقاً مشابه کدهای خودتان ---
         const bgMusic = new Audio('sounds/bg-music.mp3');
         bgMusic.loop = true; 
         bgMusic.volume = 0.3; 
@@ -503,43 +943,107 @@
         const ladderSound = new Audio('sounds/ladder.mp3');
         const snakeSound = new Audio('sounds/snake.mp3');
         const heartSound = new Audio('sounds/heart.mp3'); 
+        const winSound = new Audio('sounds/win2.mp3'); 
+        winSound.loop = true;
 
         // مارها و پله‌ها
-        const snakes = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78 };
-        const ladders = { 2: 38, 4: 14, 9: 31, 21: 42, 28: 84, 36: 44, 51: 67, 71: 91, 80: 99 };
-        const actionCellIndices = [5, 8, 10, 12, 16, 20, 23, 28, 34, 38, 40, 45, 50, 55, 59, 64, 68, 72, 75, 80, 85, 91, 94];
+        const snakes = { 16: 6, 46: 24, 49: 11, 56: 53, 64: 60, 58: 19,  89: 32, 93: 73, 95: 75, 98: 78 };
+        const ladders = { 2: 38, 4: 14, 9: 31, 26: 48, 28: 76, 36: 57, 51: 67, 71: 91, 79: 96 };
+        const actionCellIndices = [3, 5, 8, 12, 15, 18, 22, 25, 29, 33, 37, 40, 44, 47, 50, 53, 57, 59, 60, 63, 66, 69, 71, 74, 77, 81, 83, 86, 88, 91, 92, 94, 96, 97, 99];
 
-        // چالش‌های عاشقانه
-        const challengePool = [
-            "💦بشین توی بغلش و لب‌هاش رو 2 دقیقه بخور💦",
-            "🔥با زبونت از روی گردنش شروع کن لیس زدن و برو روی لبش و بعد هم برو تا روی گوشش🔥",
-            "🤤یکی از لباس‌هاش رو در بیار🤤",
-            "❤️‍🔥لای پاهاش رو 3 دقیقه از روی شلوار بمال❤️‍🔥",
-            "💦فقط 5 دقیقه آروم توی پوزیشنی که دوست داری بغلش کن💦",
-            "🤤هرجای بدنشو که گفت باید 3 بار بوس کنی🤤",
-            "🔥سرشو بزار روی پاهات و موهاش رو 4 دقیقه نوازش کن🔥",
-            "💦زبونش رو باید بیاره بیرون و میتونی هرچقدر میخوای زبونش رو بخوری💦",
-            "🤤یه گاز کوچولو از هرکدوم از نوک ممه‌هاش بگیر🤤",
-            "❤️‍🔥از نافش شروع کن آروم میک بزن و برو تا نوک ممه‌هاش❤️‍🔥",
-            "🤤دست کن توی شرتش و آروم اونجاش رو بمال🤤",
-            "🔥یکی محکم بزن در کونش🔥",
-            "🤤دستاش رو بگیر بالای سرش تا هیچکاری نتونه بکنه و 5 دقیقه تا حد مرگ تحریکش کن🤤",
-            "❤️‍🔥دست کن توی سوراخ کونش ولی زیاد دستت تو نره❤️‍🔥",
-            "💦لای پاهاش رو 2 دقیقه براش بخور💦",
-            "🤤میتونی 3 دقیقه هرچقدر میخوای کونش رو بمالی و اسپنک بزنی🤤",
-            "💦باید در حالتی که صورت‌هاتون برعکس همدیگه است از هم لب بگیرید و زبون همدیگه رو بخورید💦",
-            "🔥سرت رو از پایین بکن توی لباسش و میمی‌هاش رو میک بزن🔥",
-            "❤️‍🔥درحالیکه به پشت خوابیدی باید بیاد روت و هرجایی رو که گفتی 5 دقیقه بخوره برات❤️‍🔥",
-            "🤤فقط 4 جا از بدنش رو که خیلی دوست داری بوس کن🤤",
-            "💦باید 5 دقیقه بدنش رو در اختیارت بزاره تا هرکار دوست داشتی بکنی💦",
-            "❤️‍🔥گردن و گوش‌هاش رو 1 دقیقه بخور و نباید علامتی از تحریک شدن نشون بده،اگر تحریک شد بزن در کونش❤️‍🔥",
-            "❤️‍🔥ایندر باید ممه‌هات رو بماله و زبونتو بخوره تا صدات در بیاد❤️‍🔥",
-            "🤤توی پوزیشنی که دوست داری از روی شلوار سکس کنید🤤",
-            "🔥فقط 3 دقیقه روی کونش بخواب🔥",
-            "❤️‍🔥از الان تا آخر بازی هرکی صدا آه و ناله‌اش در بیاد باید زبونشو 1 دقیقه در اختیار طرف مقابل بزاره❤️‍🔥",
-            "🔥برو روش و هرجایی رو که گفت باید 3 دقیقه بمالی براش🔥",
-            "❤️‍🔥هرکاری تو باهاش کردی اونم همزمان یا بعدش باید همونکار رو باهات بکنه❤️‍🔥"
-        ];
+        // چالش‌های مخصوص مرد
+        const challengePool = {
+            level1: {
+                male:  [
+                            "🧸سرتو بزار روی پاهاش تا موهات رو 2 دقیقه نوازش کنه🧸",
+                            "👣پاهاشو باید از پایین تا بالای رونش ببوسی👣",
+                            "🤤فقط 4 جا از بدنش رو که خیلی دوست داری بوس کن🤤",
+                            "💦لای پاهاش رو 3 دقیقه از روی شلوار بمال💦",
+                            "🤤 براش 2 دقیقه با کون برقص🤤",
+                            "👅باید در حالتی که صورت‌هاتون برعکس همدیگه است لب بگیرید و زبون هم رو بخورید👅",
+                            "🔥یه اسپنک محکم بزنه در کونت🔥",
+                            "❤️‍🔥یکی از لباس‌هات رو دربیار❤️‍🔥",
+                            "💋لاله گوشش و گردنشو اینقد بخور تا آهش در بیاد💋",
+                        ],
+                female: [
+                            "💋فقط 4 جا از بدنش رو که خیلی دوست داری بوس کن💋",
+                            "🫂فقط 3 دقیقه آروم توی پوزیشنی که دوست داری بغلش کن🫂",
+                            "✍با ناخنت روی کمرش طرح بکش تا درست حدس بزنه✍️",
+                            "💦لای پاهاش رو 3 دقیقه از روی شلوار بمال💦",
+                            "🤤 براش 2 دقیقه با کون برقص🤤",
+                            "🔥بشین توی بغلش و 2 دقیقه لب‌هاش رو بخور🔥",
+                            "❤️‍🔥یکی از لباس‌هات رو دربیار❤️‍🔥",
+                            "👋یکی محکم بزنه در کونت👋",
+                            "🍼نوک سینه هات رو آروم ماساژ بده تا سیخ سیخ بشه🍼",
+                        ]
+            },
+            level2: {
+                male: [
+                            "❤️‍🔥از نافش شروع کن آروم میک بزن و برو تا نوک ممه‌هاش❤️‍🔥",
+                            "🍒یه گاز کوچولو از نوک ممه‌هات بگیره🍒",
+                            "🍬کل بدنشو نوازش کن و ببوس از بالا تا پایین که تحریک بشه ولی نه لیس بزن نه بخور 🍬",
+                            "👊محکم اسپنک بزنه بهت جوری که جای دستش بمونه👊",
+                            "☝️دستتو بکن توی شورتش و 3 دقیقه براش بمال تا خیس بشه☝️",
+                            "🥵دستاش رو بالای سرش بگیر تا نتونه تکون بخوره و 5 دقیقه تحریکش کن🥵",
+                            "🫦کل رون و کس و کونشو ببوس🫦",
+                            "🌀میخوابی و اون هرکار خواست به مدت 3 دقیقه باهات میکنه🌀",
+                            "🖐️یک دقیقه هر چقد خواست میتونه دست به کونت بزنه🖐️",
+                            "🍓با دستش باید تند تند برات بالا پایین کنه و اگه صدات درومد اسپنک میخوری🍓",
+                        ],
+                female: [
+                            "🫦با زبونت از روی گردنش شروع کن به لیس زدن تا روی گوشش🫦",
+                            "🍑2دقیقه هرجاتو خواست میتونه بماله🍑",
+                            "💦باسنت رو اینقدر بهش بمال تا کیرش کامل بیدار بشه💦",
+                            "⛓️گردن و گوش‌هات رو 1 دقیقه بخوره، نباید تحریک بشی وگرنه تنبیه میشی⛓️",
+                            "⚡️محکم بزنه در کونت تا رد دستش بمونه⚡️",
+                            "🧠چشماشو ببند و یه جای بدنتو بده بخوره تا درست حدس بزنه🧠",
+                            "❤️‍🔥از نافش شروع کن آروم میک بزن و برو تا بالای کیرش❤️‍🔥",
+                            "🍓یه گاز کوچولو از هرکدوم از نوک ممه‌هات بگیره🍓",
+                            "🌀وقتی خوابیده برو روش و هرجایی خواست 3 دقیقه بمال🌀",
+                            "✨اینقد براش بمال تا سفت سفت بشه✨"
+                        ]
+            },
+            level3: {
+                male: [
+                            "🔥سرتو بزار لای پاهاش و از روی شورت لیس بزن تا تحریک بشه🔥",
+                            "🤤توی پوزیشنی که دوست داری بدون اینکه بکنیش کیرتو بمال روی کسش🤤",
+                            "📸دو دقیقه بشینه روی صورتت📸",
+                            "👅اینقدر دور کسش و روناش رو بخور که التماس کنه خودش رو بخوری👅",
+                            "🤐دستاش رو ببند و اونقدر همه‌جاش رو بخور تا صداش تو خونه بپیچه🤐",
+                            "🔥دو دقیقه پیوسته بالا تا پایین کسشو بخور🔥",
+                            "🔥پوزیشن 69 بگیرید و تا آخرش ادامه بدید🔥",
+                            "❤️‍🔥 باید اینقد تحریکش کنی تا التماس کنه بکنیش ولی حق نداری بکنیش❤️‍🔥",
+                            "❤️‍🔥پنج دقیقه بدنت رو در اختیارش بذار تا هرکاری دوست داره بکنه❤️‍🔥",
+                            "🥵میشینه روت و عقب جلو میکنه ولی حق نداری بکنی توش🥵",
+                            "⛓️گردن و گوش‌هات رو 2 دقیقه بخوره ، نباید تحریک بشی و صدات در بیاد وگرنه تنبیه میشی⛓️",
+                            "🥂یچیزی که دوست داری میریزی روی بدنش و از روی بدنش میخوریش🥂",
+                            "🎲هرکاری تو باهاش کردی اونم همزمان باید باهات بکنه🎲",
+                            "🍑کونت رو 3 دقیقه بماله و محکم اسپنک بزنه🍑",
+                            "🌊هر پوزیشنی اون خواست باید 5 دقیقه پیوسته و بدون توقف بکنیش🌊",
+                            "🌪️یدور کیرتو تا ته بکن توش و در بیار🌪️"
+                        ],
+                female: [
+                            "🔥پوزیشن 69 بگیرید و تا آخرش ادامه بدید🔥",
+                            "🔥لای پاهاش رو 2 دقیقه براش بخور🔥",
+                            "🍫به کیرش شکلات بمال و تا پاک نشده لیس بزن🍫",
+                            "☝️یه انگشت بکنه توش، اگه صدات دراومد 1 دقیقه با دو انگشت عقب و جلو کنه☝️",
+                            "🐕در پوزیشن داگی لخت بمون و 1 دقیقه هرکار خواست بکنه🐕",
+                            "🤤یدور کیرشو تا ته ته بکن تو حلقت و دربیار🤤",
+                            "💦دو دقیقه تخماش رو با زبون لیس بزن💦",
+                            "👅اینقدر دور کیرش رو بمال و بخور که التماس کنه براش بخوری👅",
+                            "🤤بالا تا پایین کیرشو ببوس🤤",
+                            "⚡️پنج دقیقه داگی میکنتت⚡️",
+                            "🤤دودیقه پیوسته و سریع انگشت بکنه توش و محکم جلوعقب کنه🤤",
+                            "🎶میمی هاتو اینقد بخوره تا کبود بشه🎶",
+                            "🥂بشین روش و 5 دقیقه خودت بالا پایین شو🥂",
+                            "🎲روی زانوهات بشین براش بخور و 3دقیقه سرتو بگیره و تند تند عقب جلو کنه 🎲",
+                            "🍑کونت رو 3 دقیقه بماله و محکم اسپنک بزنه🍑",
+                            "🌊میمی هاشو  تا زیر تخماش لیس بزن🌊",
+                            "🌪️ پنج دقیقه محکم باید بکنتت و تو حق نداری آه بکشی وگرنه 2 دقیقه بیشتر تنبیه میشی🌪️"
+                        ]
+
+            }
+        };
 
         function selectAvatar(playerNum, element, avatar) {
             let siblings = element.parentElement.children;
@@ -550,6 +1054,80 @@
             if(playerNum === 1) p1Avatar = avatar; else p2Avatar = avatar;
         }
 
+        function useJoker() {
+            if (currentPlayer === 1) p1Joker = false; else p2Joker = false;
+            document.getElementById("joker-btn").style.display = "none";
+            document.getElementById("modal-title").innerText = "🃏 کارت انتقام! 🃏";
+            document.getElementById("modal-text").innerText = "چالش برعکس شد! حالا طرف مقابل باید این کار رو انجام بده 😈\n\n" + document.getElementById("modal-text").innerText;
+            document.getElementById("accept-modal-btn").innerText = "قبوله 😈!";
+        }
+
+        // --- توابع سیستم آیتم‌ها ---
+        function generateItems() {
+            itemCells = {};
+            let availableCells = [];
+            for (let i = 2; i < 99; i++) {
+                if (!snakes[i] && !ladders[i] && !actionCellIndices.includes(i)) {
+                    availableCells.push(i);
+                }
+            }
+            availableCells.sort(() => Math.random() - 0.5); 
+            itemCells[availableCells[0]] = 'shield';
+            itemCells[availableCells[1]] = 'shield';
+            itemCells[availableCells[2]] = 'magicDice';
+            itemCells[availableCells[3]] = 'magicDice';
+        }
+
+        function showItemModal(title, text) {
+            document.getElementById("modal-title").innerText = title;
+            document.getElementById("modal-text").innerText = text;
+            document.getElementById("joker-btn").style.display = "none";
+            document.getElementById("accept-modal-btn").innerText = "ایول! 😎";
+            document.getElementById("action-modal").style.display = "flex";
+        }
+
+        function updateInventoryUI() {
+            let inv = currentPlayer === 1 ? p1Inventory : p2Inventory;
+            let magicBtn = document.getElementById("magic-dice-btn");
+            let shieldStatus = document.getElementById("shield-status");
+            
+            if (inv.magicDice > 0) {
+                magicBtn.style.display = "block";
+                magicBtn.innerText = `🎲 تاس جادویی  (${inv.magicDice})`;
+            } else magicBtn.style.display = "none";
+
+            if (inv.shield > 0) {
+                shieldStatus.style.display = "block";
+                shieldStatus.innerText = `🛡️ سپر محافظ (${inv.shield})`;
+            } else shieldStatus.style.display = "none";
+        }
+
+        function useMagicDice() {
+            if (isRolling) return;
+
+            let maxPos = Math.max(p1Pos, p2Pos);
+            if (maxPos >= 40 && !isPremium) {
+                openAuthModal();
+                return;
+            }
+
+            let inv = currentPlayer === 1 ? p1Inventory : p2Inventory;
+            if (inv.magicDice <= 0) return;
+            
+            inv.magicDice--;
+            updateInventoryUI();
+            
+            isRolling = true;
+            document.getElementById("roll-btn").disabled = true;
+            
+            setTimeout(async () => {
+                await executeGameLogic(3); 
+                isRolling = false;
+                document.getElementById("roll-btn").disabled = false;
+            }, 300);
+        }
+        // ------------------------------
+
         function startGame() {
             let input1 = document.getElementById("p1-name-input").value.trim();
             let input2 = document.getElementById("p2-name-input").value.trim();
@@ -557,17 +1135,21 @@
             if(input2) p2Name = input2;
 
             document.getElementById("setup-modal").style.display = "none";
-            document.getElementById("turn-indicator").innerText = "نوبت: " + p1Name + " " + p1Avatar;
+            document.getElementById("turn-indicator").innerText = "نوبت " + p1Name + " " + p1Avatar;
 
             bgMusic.play().catch(error => console.log("مرورگر اجازه پخش خودکار را نداد."));
             document.getElementById("setup-modal").style.display = "none";
             
+            generateItems(); // تولید آیتم‌ها
             createBoard();
+            updateInventoryUI();
+            updateProfileUI();
         }
 
         function createBoard() {
             const board = document.getElementById("board");
-            board.innerHTML = ""; 
+            // به جای پاک کردن کل بورد، فقط خانه‌ها را پاک می‌کنیم تا مارها و مهره‌ها سر جایشان بمانند
+            document.querySelectorAll('.cell').forEach(cell => cell.remove());
             let cellsNum = [];
             
             for (let row = 9; row >= 0; row--) {
@@ -583,7 +1165,15 @@
                 let div = document.createElement("div");
                 div.className = "cell";
                 div.id = "cell-" + num;
-                div.innerText = num;
+                
+                let innerHTMLStr = num;
+                if (num === 100) innerHTMLStr = "🏆";
+                
+                // رسم آیتم در صورت وجود
+                if (itemCells[num] === 'shield') innerHTMLStr += `<span class="item-icon" id="item-${num}">🛡️</span>`;
+                else if (itemCells[num] === 'magicDice') innerHTMLStr += `<span class="item-icon" id="item-${num}">🎲</span>`;
+
+                div.innerHTML = innerHTMLStr;
 
                 if (actionCellIndices.includes(num)) div.classList.add("action-cell");
                 board.appendChild(div);
@@ -595,6 +1185,151 @@
             }, 100);
         }
 
+        // جابجایی بین فرم ورود و ثبت‌نام
+        function toggleAuth(type) {
+            if (type === 'subscription' && !loggedInUser) {
+                alert("⚠️ برای دسترسی به بخش خرید، ابتدا باید ثبت‌نام کرده و وارد حساب خود شوید!");
+                toggleAuth('login');
+                return;
+            }
+
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('subscription-form').style.display = 'none';
+
+            if (type === 'register') {
+                document.getElementById('register-form').style.display = 'block';
+                document.getElementById('auth-title').innerText = 'عضویت در باشگاه 📝';
+                document.getElementById('auth-desc').style.display = 'none';
+            } else if (type === 'login') {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('auth-title').innerText = 'ادامه ماجراجویی 🔐';
+                document.getElementById('auth-desc').style.display = 'block';
+            } else if (type === 'subscription') {
+                document.getElementById('subscription-form').style.display = 'block';
+                document.getElementById('auth-title').innerText = 'خرید اشتراک 💎';
+                document.getElementById('auth-desc').style.display = 'none';
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('auth-modal').style.display = 'flex';
+            if (!loggedInUser) {
+                toggleAuth('login');
+            } else if (!isPremium) {
+                toggleAuth('subscription');
+            }
+        }
+
+        // 🟢 تابع بروزرسانی باکس پروفایل در منو
+        function updateProfileUI() {
+            if (loggedInUser) {
+                let profileContainer = document.getElementById('profile-logged-in');
+                profileContainer.style.display = 'flex';
+                document.getElementById('profile-username').innerText = loggedInUser;
+                
+                let badge = document.getElementById('premium-badge');
+                let directBuyBtn = document.getElementById('direct-buy-btn');
+                
+                // === کنترل نشان وضعیت اشتراک و دکمه خرید مستقیم ===
+                if (isPremium) {
+                    badge.innerHTML = "💎 ویژه";
+                    badge.style.color = "#00ffff"; 
+                    badge.style.borderColor = "#00ffff";
+                    badge.style.background = "rgba(0, 255, 255, 0.1)";
+                    badge.style.boxShadow = "0 0 5px #00ffff";
+                    
+                    directBuyBtn.style.display = 'none'; 
+                    profileContainer.classList.add('premium-active'); // 👈 اضافه کردن کلاس برای وسط‌چین شدن
+                } else {
+                    badge.innerHTML = "🆓 عادی";
+                    badge.style.color = "#aaa"; 
+                    badge.style.borderColor = "#aaa";
+                    badge.style.background = "transparent";
+                    badge.style.boxShadow = "none";
+                    
+                    directBuyBtn.style.display = 'block'; 
+                    profileContainer.classList.remove('premium-active'); // 👈 حذف کلاس در حالت عادی
+                }
+
+                document.getElementById('profile-logged-out').style.display = 'none';
+            } else {
+                document.getElementById('profile-logged-in').style.display = 'none';
+                document.getElementById('profile-logged-out').style.display = 'block';
+            }
+        }
+
+        async function registerUser() {
+            let user = document.getElementById('reg-username').value.trim();
+            let email = document.getElementById('reg-email').value.trim();
+            let pass = document.getElementById('reg-password').value;
+            let confirmPass = document.getElementById('reg-confirm-password').value;
+            let terms = document.getElementById('reg-terms').checked;
+        
+            if (!user || !email || !pass || !confirmPass) {
+                alert("⚠️ لطفاً تمام فیلدها را پر کنید!"); return;
+            }
+            if (pass !== confirmPass) {
+                alert("⚠️ رمز عبور با تکرار آن مطابقت ندارد!"); return;
+            }
+            if (!terms) {
+                alert("⚠️ لطفاً پیمان‌نامه را تایید کنید!"); return;
+            }
+        
+            let regBtn = document.querySelector('#register-form .accept-btn');
+            regBtn.innerHTML = "⏳ در حال ایجاد حساب...";
+            regBtn.disabled = true;
+        
+            // شبیه‌سازی درخواست به سرور
+            setTimeout(() => {
+                alert("🎉 حساب کاربری شما ساخته شد و وارد شدید!");
+                loggedInUser = user;
+                isPremium = false; 
+                updateProfileUI();
+                toggleAuth('subscription'); // انتقال مستقیم به صفحه خرید
+                regBtn.innerHTML = "ایجاد حساب و ورود ✨";
+                regBtn.disabled = false;
+            }, 1000);
+        }
+
+        // --- سیستم ورود (خواندن اطلاعات و تایید) ---
+        async function loginUser() {
+            let loginStr = document.getElementById('login-username').value.trim();
+            let pass = document.getElementById('login-password').value;
+
+            if (!loginStr || !pass) {
+                alert("⚠️ لطفاً نام کاربری و رمز عبور را وارد کنید!"); return;
+            }
+            
+            // شبیه‌سازی ورود
+            loggedInUser = loginStr;
+            isPremium = false; // اینجا وضعیت پرمیوم کاربر رو از دیتابیس میگیری
+            updateProfileUI(); 
+            
+            if (isPremium) {
+                document.getElementById('auth-modal').style.display = 'none';
+                alert("🎉 خوش آمدید! قفل بازی باز شد.");
+            } else {
+                toggleAuth('subscription');
+            }
+        }
+
+        // 🟢 سیستم پرداخت
+        async function startPaymentProcess() {
+            let payBtn = document.querySelector('#subscription-form .accept-btn');
+            payBtn.innerHTML = "⏳ در حال اتصال...";
+            payBtn.disabled = true;
+        
+            setTimeout(() => {
+                alert("✅ پرداخت شبیه‌سازی شد! قفل تمام مراحل باز شد. 💎");
+                isPremium = true; // تغییر وضعیت کاربر به پرمیوم
+                updateProfileUI(); // 👈 این خط اضافه می‌شود تا نشانگر بالای صفحه فوراً آپدیت شود
+                document.getElementById('auth-modal').style.display = 'none';
+                payBtn.innerHTML = "پرداخت امن از طریق شاپرک";
+                payBtn.disabled = false;
+            }, 1500);
+        }
+
         function drawSnakesAndLadders() {
             const canvas = document.getElementById('snakes-ladders-canvas');
             const board = document.getElementById('board');
@@ -604,8 +1339,7 @@
             canvas.width = board.offsetWidth;
             canvas.height = board.offsetHeight;
 
-            canvas.style.top = board.offsetTop + "px";
-            canvas.style.left = board.offsetLeft + "px";
+            // اون دو خط top و left کاملاً پاک شدن
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.lineCap = 'round';
@@ -632,7 +1366,6 @@
             const dy = pEnd.y - pStart.y;
             const angle = Math.atan2(dy, dx);
             
-            // محاسبه مقیاس بر اساس عرض صفحه نمایش جهت ریسپانسیو شدن
             const s = Math.max(0.4, ctx.canvas.width / 800);
             
             ctx.save();
@@ -686,7 +1419,6 @@
             const dist = Math.sqrt(dx * dx + dy * dy); 
             const baseAngle = Math.atan2(dy, dx);
 
-            // محاسبه مقیاس بر اساس عرض صفحه نمایش جهت ریسپانسیو شدن
             const s = Math.max(0.4, ctx.canvas.width / 800);
 
             ctx.save();
@@ -850,7 +1582,6 @@
             ctx.restore();
         }
 
-        // --- حرکت دادن مهره‌ها ---
         function updateTokens() {
             let board = document.getElementById("board"); 
             
@@ -876,16 +1607,26 @@
 
             let cell1 = document.getElementById("cell-" + p1Pos);
             if (cell1) {
-                // تنظیم موقعیت نسبی برای ریسپانسیو بودن در هر سایزی
                 p1Token.style.left = (cell1.offsetLeft + cell1.offsetWidth * 0.1) + "px";
                 p1Token.style.top = (cell1.offsetTop + cell1.offsetHeight * 0.1) + "px";
             }
 
             let cell2 = document.getElementById("cell-" + p2Pos);
             if (cell2) {
-                // تنظیم موقعیت نسبی برای ریسپانسیو بودن در هر سایزی
                 p2Token.style.left = (cell2.offsetLeft + cell2.offsetWidth * 0.9 - p2Token.offsetWidth) + "px";
                 p2Token.style.top = (cell2.offsetTop + cell2.offsetHeight * 0.9 - p2Token.offsetHeight) + "px";
+            }
+
+            let maxPos = Math.max(p1Pos, p2Pos);
+            if (maxPos >= 70) {
+                document.body.style.background = "radial-gradient(circle, #b30000 0%, #330000 100%)";
+                document.body.style.boxShadow = "inset 0 0 150px rgba(255, 0, 0, 0.8)";
+            } else if (maxPos >= 40) {
+                document.body.style.background = "radial-gradient(circle, #800000 0%, #220000 100%)";
+                document.body.style.boxShadow = "inset 0 0 80px rgba(255, 50, 50, 0.4)";
+            } else {
+                document.body.style.background = "radial-gradient(circle, #4a0e17 0%, #1a0508 100%)";
+                document.body.style.boxShadow = "none";
             }
         }
 
@@ -895,9 +1636,20 @@
         });
 
         function rollDice() {
-            let diceZ = window.innerWidth <= 768 ? 20 : 30; 
+            // محاسبه داینامیک Z با توجه به سایزهای جدید صفحه نمایش
+            let diceZ;
+            if (window.innerWidth <= 600) diceZ = 20;
+            else if (window.innerWidth > 1080) diceZ = 45; // متناسب با سایز 90 پیکسلی تاس
+            else diceZ = 30; 
 
             if (isRolling) return; 
+
+            let maxPos = Math.max(p1Pos, p2Pos);
+            if (maxPos >= 40 && !isPremium) {
+                openAuthModal();
+                return;
+            }
+
             isRolling = true;
             document.getElementById("roll-btn").disabled = true;
 
@@ -929,17 +1681,49 @@
             }, 1500);
         }
 
+        function showSetup() {
+            document.getElementById("rules-modal").style.display = "none";
+            document.getElementById("setup-modal").style.display = "flex";
+        }
+
         function checkForActions(pos) {
             if (actionCellIndices.includes(pos)) {
-                let randomChallenge = challengePool[Math.floor(Math.random() * challengePool.length)];
+                let level = "";
+                if (pos <= 30) level = "level1";
+                else if (pos <= 70) level = "level2";
+                else level = "level3";
 
-                heartSound.currentTime = 0; 
-                heartSound.play();
-
-                let modal = document.getElementById("action-modal");
+                let gender = (currentPlayer === 1) ? 'female' : 'male';
+                let pool = challengePool[level][gender];
+                let randomChallenge = pool[Math.floor(Math.random() * pool.length)];
+            
+                heartSound.currentTime = 0; heartSound.play();
+                document.getElementById("modal-title").innerText = "چالش عاشقانه! 💌";
                 document.getElementById("modal-text").innerText = randomChallenge;
-                modal.style.display = "flex";
+                
+                let hasJoker = (currentPlayer === 1) ? p1Joker : p2Joker;
+                document.getElementById("joker-btn").style.display = hasJoker ? "inline-block" : "none";
+                document.getElementById("accept-modal-btn").innerText = "انجامش می‌دیم!";
+            
+                document.getElementById("action-modal").style.display = "flex";
             }
+        }
+
+        let fireworksInterval = null; 
+
+        function launchFireworks() {
+            fireworksInterval = setInterval(() => {
+                const colors = ["#ff006e", "#ffd60a", "#00f5d4", "#ff477e", "#8338ec"];
+                for (let i = 0; i < 5; i++) {
+                    const firework = document.createElement("div");
+                    firework.className = "firework";
+                    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.left = Math.random() * 100 + "vw";
+                    firework.style.top = Math.random() * 100 + "vh";
+                    document.body.appendChild(firework);
+                    setTimeout(() => firework.remove(), 1000);
+                }
+            }, 300);
         }
         
         async function executeGameLogic(dice) {
@@ -950,7 +1734,8 @@
                 let requiredDice = 100 - currentPosCheck;
                 
                 currentPlayer = currentPlayer === 1 ? 2 : 1;
-                document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت: " + p1Name + " " + p1Avatar : "نوبت: " + p2Name + " " + p2Avatar;
+                document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت " + p1Name + " " + p1Avatar : "نوبت " + p2Name + " " + p2Avatar;
+                updateInventoryUI(); // آپدیت پنل برای نفر بعدی
                 return;
             }
 
@@ -971,13 +1756,21 @@
             let targetPos = player === 1 ? p1Pos : p2Pos;
             let finalPos = targetPos;
 
+            // منطق دفاع با سپر در برابر مارها
             if (snakes[targetPos]) {
-                snakeSound.currentTime = 0;
-                snakeSound.play();
-                
-                if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
-                
-                finalPos = snakes[targetPos];
+                let inv = player === 1 ? p1Inventory : p2Inventory;
+                if (inv.shield > 0) {
+                    inv.shield--; 
+                    showItemModal("🛡️ دفع نیش مار!", "یک مار غول‌پیکر می‌خواست نیشت بزنه، اما سپرت مصرف شد و نجات پیدا کردی!");
+                    updateInventoryUI();
+                } else {
+                    snakeSound.currentTime = 0;
+                    snakeSound.play();
+                    
+                    if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+                    
+                    finalPos = snakes[targetPos];
+                }
             } 
             else if (ladders[targetPos]) {
                 ladderSound.currentTime = 0;
@@ -996,7 +1789,23 @@
             }
 
             setTimeout(() => {
-                if (actionCellIndices.includes(targetPos)) {
+                // بررسی برداشتن آیتم‌های روی زمین
+                if (itemCells[targetPos]) {
+                    let inv = player === 1 ? p1Inventory : p2Inventory;
+                    let itemName = itemCells[targetPos];
+                    if (itemName === 'shield') {
+                        inv.shield++;
+                        showItemModal("🛡️ آیتم جدید: سپر", "یک سپر پیدا کردی! دفعه بعد که روی مار بیفتی، از نیش خوردنت جلوگیری می‌کنه.");
+                    } else if (itemName === 'magicDice') {
+                        inv.magicDice++;
+                        showItemModal("🎲 آیتم جدید: تاس جادویی", "تاس جادویی پیدا کردی! با این تاس می‌تونی بدون ریختنِ تاسِ عادی، دقیقاً ۳ قدم بری جلو.");
+                    }
+                    delete itemCells[targetPos]; 
+                    let icon = document.getElementById("item-" + targetPos);
+                    if (icon) icon.remove(); 
+                    updateInventoryUI();
+                } 
+                else if (actionCellIndices.includes(targetPos)) {
                     if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                     checkForActions(targetPos);
                 }
@@ -1004,13 +1813,18 @@
 
             if (targetPos === 100) {
                 setTimeout(() => {
-                    let winnerName = player === 1 ? p1Name + " " + p1Avatar : p2Name + " " + p2Avatar;
-                    if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]); 
-                    alert("🎉 برنده بازی: " + winnerName + "\nجایزه بزرگ امشب متعلق به برنده است! 😉");
+                    launchFireworks();
+                    winSound.play();
                     
-                    p1Pos = 1; p2Pos = 1; currentPlayer = 1; rollCount = 0;
-                    document.getElementById("dice").style.transform = `translateZ(-25px) rotateX(0deg) rotateY(0deg)`;
-                    document.getElementById("setup-modal").style.display = "flex";
+                    let winnerName = player === 1 ? p1Name : p2Name;
+                    let modal = document.getElementById("action-modal");
+                    document.getElementById("modal-title").innerText = "🎉 پیروزی داغ! 🎉";
+                    document.getElementById("modal-text").innerText = 
+                        winnerName + " عزیز، تو برنده شدی!\nامشب جایزه ویژه‌ای داری... بدنت رو آماده کن برای یک شبِ فراموش‌نشدنی! 😉";
+                    
+                    document.getElementById("joker-btn").style.display = "none";
+                    document.getElementById("accept-modal-btn").innerText = "بزن بریم!";
+                    modal.style.display = "flex";
                 }, 500);
                 return;
             }
@@ -1018,16 +1832,50 @@
             if (dice === 6) {
                 let pName = player === 1 ? p1Name : p2Name;
                 let pAvatar = player === 1 ? p1Avatar : p2Avatar;
-                document.getElementById("turn-indicator").innerText = " جایزه ۶! دوباره بریز " + pName + " " + pAvatar;
+                document.getElementById("turn-indicator").innerText = " دوباره بریز " + pName + " " + pAvatar;
                 if (navigator.vibrate) navigator.vibrate([80, 80, 80]);
             } else {
                 currentPlayer = currentPlayer === 1 ? 2 : 1;
-                document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت: " + p1Name + " " + p1Avatar : "نوبت: " + p2Name + " " + p2Avatar;
+                document.getElementById("turn-indicator").innerText = currentPlayer === 1 ? "نوبت " + p1Name + " " + p1Avatar : "نوبت " + p2Name + " " + p2Avatar;
             }
+            updateInventoryUI();
         }
 
         function closeModal() {
             document.getElementById("action-modal").style.display = "none";
+            
+            if (fireworksInterval) {
+                clearInterval(fireworksInterval);
+                fireworksInterval = null;
+                document.querySelectorAll('.firework').forEach(f => f.remove());
+            }
+
+            if (winSound) {
+                winSound.pause();
+                winSound.currentTime = 0; 
+            }
+
+            let title = document.getElementById("modal-title").innerText;
+            if (title === "🎉 پیروزی داغ! 🎉") {
+                p1Pos = 1; 
+                p2Pos = 1; 
+                currentPlayer = 1; 
+                rollCount = 0;
+                p1Joker = true;
+                p2Joker = true;
+                
+                // ریست شدن کیف‌پشتی‌ها و پخش مجدد آیتم‌ها روی زمین
+                p1Inventory = { shield: 0, magicDice: 0 };
+                p2Inventory = { shield: 0, magicDice: 0 };
+                generateItems();
+                createBoard();
+
+                let diceZ = window.innerWidth > 1080 ? 45 : (window.innerWidth <= 600 ? 20 : 30);
+                document.getElementById("dice").style.transform = `translateZ(-${diceZ}px) rotateX(0deg) rotateY(0deg)`;
+                
+                document.getElementById("setup-modal").style.display = "flex";
+                document.body.style.background = ""; 
+            }
         }
     </script>
 </body>
